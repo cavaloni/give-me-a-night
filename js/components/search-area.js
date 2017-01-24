@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import * as actions from '../actions/index';
 
 
-class SearchArea extends Component {
+export class SearchArea extends Component {
     constructor(props) {
         super(props)
         this.handleSubmit = this
@@ -59,8 +59,4 @@ class SearchArea extends Component {
 
 }
 
-const mapStatetoProps = (state, props) => ({
-
-});
-
-export default connect(mapStatetoProps)(SearchArea)
+export default connect()(SearchArea);

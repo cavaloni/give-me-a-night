@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+- '0.10'
+- '0.11'
+script: npm run-script deploy
+env:
+ global:
+ - GH_REF: github.com/cavaloni/give-me-a-night.git
+ - secure: ec0a9d677b01d58fc06627dd43583082058aa3ef

@@ -1,7 +1,9 @@
 import React from 'react';
 
-export default function Card () {
+
+
+export default function Card (props) {
     return (
-        <div></div>
+        <div>{props.evt}</div>
     )
 }

@@ -32,7 +32,7 @@ export const search = (loc, feel) => ({
 export const fetchZomato = (loc, feel) => dispatch => {
     let query;
     let order;
-    const city = loc.split(/[ ]+/);
+    const city = loc.split(/[ ,]+/);
     const cityQuery = city.map(item => {
         if (item == undefined) {
             return ''
@@ -41,23 +41,23 @@ export const fetchZomato = (loc, feel) => dispatch => {
         }
     })
     if (feel == 'crazy') {
-        query = 'nightlife';
+        query = 'mexican';
     } else if (feel = 'fun') {
-        query = 'drinks';
+        query = 'indian';
     } else if (feel = 'laid back') {
         query = 'cafe';
     } else if (feel = 'unique') {
         query = 'dinner';
         order = 'cost';
     }
-    if (order == '') {
+    if (order === undefined) {
         order = 'rating';
     }
-    const url = `https://developers.zomato.com/api/v2.1/search?entity_id=${cityQuery[0]}%2B${cityQuery[1]},${cityQuery[2]}&entity_type=city&q=${query}&radius=1500&sort=${order}`
+    const url = `https://developers.zomato.com/api/v2.1/search?&q=${cityQuery[0]}%20${cityQuery[1]}%2C%20${cityQuery[2]}%20${query}&radius=1500&sort=${order}`
     
     return fetch(url, {
         headers: {
-            'user-key': `78be78c81e2efb35f45588e55478c59f`,
+            'X-Zomato-API-Key': `78be78c81e2efb35f45588e55478c59f`,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
@@ -66,7 +66,7 @@ export const fetchZomato = (loc, feel) => dispatch => {
         return data.json();
     }).then(response => {
         console.log(response);
-        dispatch(fetchSuccess(response, 'zomatoResults'))
+        dispatch(fetchSuccess(response.restaurants, 'zomatoResults'))
     }).catch(err => {
         console.log(err);
     })
@@ -93,7 +93,7 @@ export const fetchMovies = (loc, feel) => dispatch => {
         return data.json();
     }).then(response => {
         console.log(response);
-        dispatch(fetchSuccess(response, 'movieResults'))
+        dispatch(fetchSuccess(response.results, 'movieResults'))
     }).catch(err => {
         console.log(err);
     })
@@ -111,11 +111,11 @@ export const fetchBandsInTown = (loc, feel) => dispatch => {
     })
 
     if (feel == 'crazy') {
-        query = 'electronic';
+        query = 'dance';
     } else if (feel = 'fun') {
         query = 'rock';
     } else if (feel = 'laid back') {
-        query = 'acoustic';
+        query = 'guitar';
     } else if (feel = 'unique') {
         query = 'jazz'
     }
@@ -123,7 +123,8 @@ export const fetchBandsInTown = (loc, feel) => dispatch => {
     const dateNow = moment().format('YYYY-MM-DD');
     const oArgs = {
       app_key: 'HkqR6GDf6r2P4h23' ,
-      q: query,
+      keywords: query,
+      within: 30,
       where: loc,
       "date": dateNow,
       page_size: 5,
@@ -131,11 +132,13 @@ export const fetchBandsInTown = (loc, feel) => dispatch => {
    };
    return EVDB.API.call("/events/search", oArgs, function(oData) {
        console.log(oData);
-       dispatch(fetchSuccess(oData, 'bitResults'));
+       dispatch(fetchSuccess(oData.events.event, 'bitResults'));
    })
 }
 
 export const fetchEventBrite = (loc, feel) => dispatch => {
+    console.log(feel);
+    
     let query;
     let catQuery;
     let counter = 0;
@@ -151,11 +154,11 @@ export const fetchEventBrite = (loc, feel) => dispatch => {
 
     if (feel == 'crazy') {
         query = '105%2C108%2C110';
-    } else if (feel = 'fun') {
+    } else if (feel == 'fun') {
         query = '113%2C105';
-    } else if (feel = 'laid back') {
+    } else if (feel == 'laid-back') {
         query = '107%2C109';
-    } else if (feel = 'unique') {
+    } else if (feel == 'unique') {
         query = '114%2C102';
     } 
     if (query) {
@@ -163,6 +166,8 @@ export const fetchEventBrite = (loc, feel) => dispatch => {
     } else {
         catQuery = '';
     }
+    console.log(query);
+    console.log(catQuery);
     const url = `https://www.eventbriteapi.com/v3/events/search/?location.address=${cityQuery[0]}+${cityQuery[1]}%2C+${cityQuery[2]}&location.within=30mi&${catQuery}start_date.keyword=today&token=6SVNTPUPXW5HGNKP5ZGW`
 
     return fetch(url, {
@@ -177,7 +182,7 @@ export const fetchEventBrite = (loc, feel) => dispatch => {
             counter++
             dispatch(fetchEventBrite(loc))
         }
-        dispatch(fetchSuccess(response, 'ebResults'))
+        dispatch(fetchSuccess(response.events, 'ebResults'))
     }).catch(err => {
         console.log(err);
     })
