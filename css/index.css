@@ -1,0 +1,15 @@
+.card {
+    display: inline-block;
+    width: 25%;
+    height: 200px;
+}
+
+.card>img {
+    width: 90%;
+    height: 90%;
+}
+
+.results-box {
+    border: 1px solid black;
+}
+

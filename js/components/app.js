@@ -15,9 +15,9 @@ export class App extends Component {
         <div className="app">
             <div className="banner"/>
             <SearchArea/>
-            <ResultBox results={this.props.eventsToDisplay[0]} id="1"/>
-            <ResultBox results={this.props.eventsToDisplay[1]} id="2"/>
-            <ResultBox results={this.props.eventsToDisplay[2]} id="3"/>
+            <ResultBox results={this.props.eventsToDisplay[0]} id="0"/>
+            <ResultBox results={this.props.eventsToDisplay[1]} id="1"/>
+            <ResultBox results={this.props.eventsToDisplay[2]} id="2"/>
         </div>
     )
     }

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 
 import * as actions from '../actions/index';
 
+import {browserHistory} from 'react-router';
 
 export class SearchArea extends Component {
     constructor(props) {
@@ -17,21 +18,14 @@ export class SearchArea extends Component {
         e.preventDefault();
         const loc = this.location.value;
         const feel = this.feeling.value;
-        this
-            .props
-            .dispatch(actions.search(loc, feel));
-        this
-            .props
-            .dispatch(actions.fetchZomato(loc, feel));
-        this
-            .props
-            .dispatch(actions.fetchMovies(loc, feel));
-        this
-            .props
-            .dispatch(actions.fetchBandsInTown(loc, feel));
-        this
-            .props
-            .dispatch(actions.fetchEventBrite(loc, feel));
+        
+        this.props.dispatch(actions.search(loc, feel));
+        this.props.dispatch(actions.fetchZomato(loc, feel));
+        this.props.dispatch(actions.fetchMovies(loc, feel));
+        this.props.dispatch(actions.fetchBandsInTown(loc, feel));
+        this.props.dispatch(actions.fetchEventBrite(loc, feel));
+
+        browserHistory.push('/results');
     }
 
     render() {
