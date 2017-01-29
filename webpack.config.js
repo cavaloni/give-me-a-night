@@ -2,6 +2,8 @@ var path = require('path');
 
 var webpack = require('webpack');
 
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 module.exports = {
   entry: path.resolve(__dirname, 'js/index.js'),
   output: {

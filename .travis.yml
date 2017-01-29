@@ -1,9 +1,11 @@
-language: node_js
+language: generic
 node_js:
 - '0.10'
 - '0.11'
 script: npm run-script deploy
 env:
- global:
- - GH_REF: github.com/cavaloni/give-me-a-night.git
- - secure: ec0a9d677b01d58fc06627dd43583082058aa3ef
+  global:
+  - GH_REF: github.com/cavaloni/give-me-a-night.git
+  - secure: ec0a9d677b01d58fc06627dd43583082058aa3ef
+  - secure: udMTKY1QUqgmyo/Ooc0k/CkhIAw0G4rKaRp8Sgo5ghNiskjEwx1FogIhhyA1GfIskA0P/tzGlop8p6QvXWPLl0d8xk9AWLsgyQkDqUFdNeu0M+K6y85HDEWFGf1t+/AZLNh/AhNN+8M3wHH/8mEQE1SFPqUfFP4LExhBxYL+usNSAuXeWikZA26AAsf3wOyMnV1JbHGM/PHVdO8WIoifYSel6yqryh8suHmsSvS+aaKXBLyYR5YtzGj1EbkohiyYHijx7xswHdtYfjcvS9rmbb47m+twZkbIXZZBvWdUljqCuARiTsa8q9kJ19yY6IM9emWy6+4Ps9IAlDJXmZsnXZIVq4oWUadnaEjwIbxYcleWpLROx1RsVLdPfysEWLwaExyhTQuzMRiZjUq3t1nTVcGMBfTk2y2OJhEc9dd4JBNMlZvhUuJ5Oz4nH0mtKiyFA+nDuel467AyyiZgD373aSIgXxlKXM1Y/t6BRNV6sLygvYdtiUB4eRv+65E8KONsqQc+UuFAVjuQTR7kilXcMXRNi8oyRn8/kdYweyeuljS0/BY3ofMjkhHDAVcZGXLaTCOJIZQr0LSO0HFqGUwbKLdOpFGGgK1ec2j1IXziYXEhSb7GNOLKEj7A7jCKVFSKYic76ZlLTwiSfP/c0DATRAlM3WhEPEV9VHEYn1eMY84=
+before_install: openssl aes-256-cbc -k "Caval0n12" -in super_secret.txt -out super_secret.txt.enc

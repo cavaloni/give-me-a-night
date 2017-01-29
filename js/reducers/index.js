@@ -1,8 +1,11 @@
 import * as actions from '../actions/index';
 import update from 'immutability-helper';
+import objectPath from 'object-path';
 
 function eventRandomizer (events, not) {  
-
+    if (events.length == 1) {
+        return 0
+    }
     let eventsLength;
     if (events.length > 5) {
         eventsLength = 5
@@ -36,9 +39,7 @@ const initialState = {
 export const appReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'FETCH_SUCCESS':
-
-            console.log(action.results)
-
+ 
             let indecesOfDisplayed = [];
             let tempObj = {};
             let returnObj = {};
@@ -65,20 +66,6 @@ export const appReducer = (state = initialState, action) => {
                 return Object.assign({}, resultsList, tempObj);
             });
 
-            // if (action.results.length >= 3) {
-            //     returnObj.eventsToDisplay = returnObj.eventsToDisplay.map(resultsList => {
-            //         if (isEqual(action.results[resultsList[action.provider].idCheck], resultsList[action.provider])) {
-            //             console.log('this happened');
-            //             let newEventToAddIndex = eventRandomizer(action.results, eventToAddIndex);
-            //             eventToAdd = action.results[newEventToAddIndex];
-            //             tempObj[action.provider] = eventToAdd;
-            //             return Object.assign({}, resultsList, tempObj)
-            //         } else {
-            //             return resultsList
-            //         }
-            //     })
-            // }
-
             returnObj[action.provider] = action.results;
             return Object.assign({}, state, returnObj);
 
@@ -94,22 +81,61 @@ export const appReducer = (state = initialState, action) => {
             })
 
         case 'RETURN_NEW_PHOTO':
+            if (action.photo === 'default') {
+                action.photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"
+            }
+
             let index = action.id;
             let currentUpdate = state.eventsToDisplay[index];
             const photoUpdateObj = update(currentUpdate.zomatoResults.restaurant, {
-                $merge: {featured_image: action.photo}
+                $merge: {
+                    featured_image: action.photo
+                }
             });
             const updatedEventToDisplay = update(currentUpdate, {
                 $merge: {
-                zomatoResults: { 
-                    restaurant: photoUpdateObj
-                }}
+                    zomatoResults: {
+                        restaurant: photoUpdateObj
+                    }
+                }
             })
             const updateParams = {}
-            updateParams[index] = {$merge: updatedEventToDisplay}
+            updateParams[index] = {
+                $merge: updatedEventToDisplay
+            }
             const updatedEventsToDisplay = update(state.eventsToDisplay, updateParams);
-            const updatedState = update(state, {$merge: {eventsToDisplay: updatedEventsToDisplay}})
+            const updatedState = update(state, {
+                $merge: {
+                    eventsToDisplay: updatedEventsToDisplay
+                }
+            })
             return updatedState
+        
+        case 'NO_RESULTS':
+            let stateCopy = state;
+            let imageTitleRoutes = {
+                    ebResults: {
+                        image: 'logo',
+                        title: 'name.text'
+                    },
+                    zomatoResults: {
+                        image: 'restaurant.featured_image',
+                        title:  'restaurant.name'
+                    },
+                    movieResults: {
+                        image: 'poster_path',
+                        title: 'original.title'
+                    },
+                    bitResults: {
+                        image: 'image.medium.url',
+                        title: 'title'
+                    }
+                } 
+            stateCopy.eventsToDisplay.forEach((list) => {
+                objectPath.set(list[action.provider], imageTitleRoutes[action.provider].image, 'http://topradio.com.ua/static/images/sad-no-results.png') ;
+                objectPath.set(list[action.provider], imageTitleRoutes[action.provider].title, 'Small Town?');
+            })
+            return stateCopy
         default:
 
             return state

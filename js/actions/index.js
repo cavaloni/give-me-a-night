@@ -1,34 +1,14 @@
-//fetch foursquare
-//fetch fandango
-//fetch bandsintown
-//fetch eventbrite
-//success and failures for each of these
-//search to update state to search values
-
 import fetch from 'isomorphic-fetch';
 import moment from 'moment';
-
-import oauthSignature from 'oauth-signature';  
-import n from 'nonce';  
-import qs from 'querystring';  
-import _ from 'lodash';
-import fetchJsonp from 'fetch-jsonp';
 import geocoder from 'geocoder-geojson'
-// var Autocomplete = require('google-places-browser/autocomplete');
-// var Places = require('google-places-browser/places');
 
-// var autocomplete = Autocomplete(window.google);
-// var places = Places(window.google);
+//google JS API
 const google = window.google;
-var autocomplete = new google.maps.places.AutocompleteService();
+const autocomplete = new google.maps.places.AutocompleteService();
+const document = require('global/document');
+const element = document.createElement('div')
+const places = new google.maps.places.PlacesService(element)
 
-var document = require('global/document');
-var element = document.createElement('div')
-var places = new google.maps.places.PlacesService(element)
-
-
-
-const nn = n();
 
 export const FETCH_SUCCESS = 'FETCH_SUCCESS';
 export const fetchSuccess = (results, provider) => ({
@@ -58,6 +38,12 @@ export const returnNewPhoto = (photo, id) => ({
     id
 })
 
+export const NO_RESULTS = 'NO_RESULTS';
+export const noResults = provider => ({
+    type: NO_RESULTS,
+    provider
+})
+
 export const fetchZomato = (loc, feel) => dispatch => {
     let query;
     let order;
@@ -69,8 +55,6 @@ export const fetchZomato = (loc, feel) => dispatch => {
             return item
         }
     })
-
-    // const cQuery = 
 
     let cityGeo;
 
@@ -101,7 +85,7 @@ export const fetchZomato = (loc, feel) => dispatch => {
             order = 'rating';
         }
         const url = `https://developers.zomato.com/api/v2.1/search?&q=${query}&lon=${cGeo.long}&lat=${cGeo.lat}&sort=${order}`
-        //balls
+
         return fetch(url, {
             headers: {
                 'X-Zomato-API-Key': `78be78c81e2efb35f45588e55478c59f`,
@@ -118,15 +102,21 @@ export const fetchZomato = (loc, feel) => dispatch => {
         })
     })
 }
-//butt
+
 export const fetchImages = (data, name, id) => dispatch => {
     let placeID = '';
     autocomplete.getPlacePredictions({input: data + ' ' + name}, function (results, status) {
-        console.log(results);
+        if (status !== 'OK') {
+            dispatch(returnNewPhoto('default', id))
+            return
+        }
         placeID = results[0].place_id;
         console.log(placeID);
         places.getDetails({placeId: placeID}, function (results, status) {  
-            console.log(results);
+            if(!results.photos) {
+                dispatch(returnNewPhoto('default', id))
+                return
+            }
             const photo = results.photos[0].getUrl({'maxWidth': 300, 'maxHeight': 300})
             dispatch(returnNewPhoto(photo, id))
         })
@@ -192,12 +182,15 @@ export const fetchBandsInTown = (loc, feel) => dispatch => {
       sort_order: "popularity",
    };
    return EVDB.API.call("/events/search", oArgs, function(oData) {
-       console.log(oData);
+       if (!oData.events) {
+           dispatch(noResults('bitResults'))
+           return
+       }
        dispatch(fetchSuccess(oData.events.event, 'bitResults'));
    })
 }
 
-export const fetchEventBrite = (loc, feel) => dispatch => {
+export const fetchEventBrite = (loc, feel, attempt2) => dispatch => {
     console.log(feel);
     
     let query;
@@ -227,9 +220,17 @@ export const fetchEventBrite = (loc, feel) => dispatch => {
     } else {
         catQuery = '';
     }
-    console.log(query);
-    console.log(catQuery);
-    const url = `https://www.eventbriteapi.com/v3/events/search/?location.address=${cityQuery[0]}+${cityQuery[1]}%2C+${cityQuery[2]}&location.within=30mi&${catQuery}start_date.keyword=today&token=6SVNTPUPXW5HGNKP5ZGW`
+ 
+    let locationQuery;
+
+    if (!cityQuery[2]) {
+        locationQuery = `${cityQuery[0]}%2C+${cityQuery[1]}`
+    } else {
+        locationQuery = `${cityQuery[0]}+${cityQuery[1]}%2C+${cityQuery[2]}`
+    }
+
+    console.log(locationQuery);
+    const url = `https://www.eventbriteapi.com/v3/events/search/?location.address=${locationQuery}&location.within=30mi&${catQuery}start_date.keyword=today&token=6SVNTPUPXW5HGNKP5ZGW`
 
     return fetch(url, {
         "data": {
@@ -238,111 +239,24 @@ export const fetchEventBrite = (loc, feel) => dispatch => {
     }).then((data) => {
         return data.json();
     }).then(response => {
+        console.log(response);
         console.log(response.events);
-        if (!response.events.length && counter < 1) {
+        console.log(!feel);
+        if (response.events  === undefined && !attempt2) {
+            console.log('-----------------------------');
+            console.log('this happened');
+            console.log(!feel);
             counter++
-            dispatch(fetchEventBrite(loc))
+            return dispatch(fetchEventBrite(loc, null, true))
+        }
+        if (response.error && !feel) {
+            console.log('-----------------------------');
+            console.log('and then this happened');
+            dispatch(noResults('ebResults'));
+            return
         }
         dispatch(fetchSuccess(response.events, 'ebResults'))
     }).catch(err => {
         console.log(err);
     })
 }
-
-
-
-
-/* Function for yelp call
- * ------------------------
- * set_parameters: object with params to search
- * callback: callback(error, response, body)
- */
-export const fetchZomatos = (loc, feel) => dispatch => {
-    const city = loc.split(/[ ,]+/);
-    const cityQuery = city.map(item => {
-        if (item == undefined) {
-            return ''
-        } else {
-            return item
-        }
-    })
-
-    
-
-    let query;
-    if (feel == 'crazy') {
-        query = 'mexican';
-    } else if (feel = 'fun') {
-        query = 'indian';
-    } else if (feel = 'laid back') {
-        query = 'cafe';
-    } else if (feel = 'unique') {
-        query = 'dinner';
-    }
-
-    
-
-    const set_parameters = {
-        term: query,
-        location: `${cityQuery[0]}+${cityQuery[1]}+${cityQuery[2]}`
-    }
-
-    /* The type of request */
-    var httpMethod = 'GET';
-
-    /* The url we are using for the request */
-    var url = 'http://api.yelp.com/v2/search';
-
-    /* We can setup default parameters here */
-    var default_parameters = {
-        location: 'San+Francisco',
-        sort: '2'
-    };
-
-    /* We set the require parameters here */
-    var required_parameters = {
-        oauth_consumer_key: '90pqj46kzLBYNMlCJVz7jA',
-        oauth_token: 'V39KlRwQsE4Muw93eEiv6h-VwT9ICrKh',
-        oauth_nonce: nn(),
-        oauth_timestamp: nn().toString().substr(0, 10),
-        oauth_signature_method: 'HMAC-SHA1',
-        oauth_version: '1.0'
-    };
-
-    /* We combine all the parameters in order of importance */
-    var parameters = _.assign(default_parameters, set_parameters, required_parameters);
-
-    /* We set our secrets here */
-    var consumerSecret = 'DJFwzo5zMrm29glQnyJ3kky7h9k';
-    var tokenSecret = 'Y15jkufJYR99XYL3mDB7kaC9oUM';
-
-    /* Then we call Yelp's Oauth 1.0a server, and it returns a signature */
-    /* Note: This signature is only good for 300 seconds after the oauth_timestamp */
-    var signature = oauthSignature.generate(httpMethod, url, parameters, consumerSecret, tokenSecret, {
-        encodeSignature: false
-    });
-
-    /* We add the signature to the list of paramters */
-    parameters.oauth_signature = signature;
-
-    /* Then we turn the paramters object, to a query string */
-    var paramURL = qs.stringify(parameters);
-
-    /* Add the query string to the url */
-    var apiURL = url + '?' + paramURL;
-    function custom_callback() {  
-        console.log('this happened');
-    }
-    /* Then we use request to send make the API Request */
-    return fetch(apiURL, {
-     
-    }).then((data) => {
-        return data.json();
-    }).then(response => {
-        console.log(response);
-        dispatch(fetchSuccess(response, 'zomatoResults'))
-    }).catch(err => {
-        console.log(err);
-    })
-
-};

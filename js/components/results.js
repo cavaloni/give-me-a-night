@@ -20,17 +20,17 @@ export class ResultBox extends Component {
             return <div></div>
         }
 
-        console.log('line23 results' + this.props.results.zomatoResults.restaurant.featured_image);
+        const noResultsImage = 'http://topradio.com.ua/static/images/sad-no-results.png'
+
 
         if (this.props.results.zomatoResults.restaurant.featured_image === '') {
                 this.getRestImages();
-                console.log('this worked1');
         }
-
+        
         const restaurant = this.props.results.zomatoResults.restaurant;
 
         const movie = {
-            image: `https://image.tmdb.org/t/p/w500${this.props.results.movieResults.poster_path}`,
+            image: `https://image.tmdb.org/t/p/w500${this.props.results.movieResults.poster_path}` || noResultsImage,
             title: this.props.results.movieResults.original_title
         }
         'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQEr_CovLbfaLjHIo6JgUfkfVKm' +
@@ -44,14 +44,17 @@ export class ResultBox extends Component {
             title: this.props.results.bitResults.title
         }
 
-        const event = {
-            image: this.props.results.ebResults.logo.url,
-            title: this.props.results.ebResults.name.text
+        if (this.props.results.ebResults.logo === null) {
+            this.props.results.ebResults.logo = {url: ''};
+            this.props.results.ebResults.logo.url = 'http://www.e-xinergia.com/xframework/app/frontend/view/imgs//slides/slide_venta_entradas.png'
         }
 
-        // if (restaurant.image == '') {
-        //     this.getRestImages(restaurant);
-        // }
+        const event = {
+            image: this.props.results.ebResults.logo.url || noResultsImage,
+            title: this.props.results.ebResults.name.text
+        }
+        
+        
 
         return (
 
@@ -64,5 +67,6 @@ export class ResultBox extends Component {
         )
     }
 }
+
 
 export default connect()(ResultBox);
