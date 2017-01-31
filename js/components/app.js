@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import SearchArea from './search-area';
-import ResultBox from './results';
-import {connect} from 'react-redux';
 
+import {connect} from 'react-redux';
 
 
 export class App extends Component {
@@ -11,21 +10,16 @@ export class App extends Component {
     }
     render() {
         console.log(this.props);
-    return (
-        <div className="app">
-            <div className="banner"/>
-            <SearchArea/>
-            <ResultBox results={this.props.eventsToDisplay[0]} id="0"/>
-            <ResultBox results={this.props.eventsToDisplay[1]} id="1"/>
-            <ResultBox results={this.props.eventsToDisplay[2]} id="2"/>
-        </div>
-    )
+        return (
+            <div className="app">
+                <div className="banner"/>                
+                <SearchArea />
+                {this.props.children}
+            </div>
+        )
     }
 }
 
-const mapStatetoProps = (state, props) => ({
-    eventsToDisplay: state.eventsToDisplay,
-    search: state.search
-});
+const mapStatetoProps = (state, props) => ({eventsToDisplay: state.eventsToDisplay, search: state.search});
 
 export default connect(mapStatetoProps)(App)

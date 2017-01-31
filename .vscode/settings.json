@@ -1,5 +1,6 @@
 {
     "eslint.enable": true,
     "vsicons.presets.angular": false,
-    "editor.renderIndentGuides": true
+    "editor.renderIndentGuides": true,
+    "editor.fontFamily": "Hack, monospace"
 }

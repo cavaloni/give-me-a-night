@@ -29,6 +29,7 @@ export class SearchArea extends Component {
     }
 
     render() {
+        
         return (
             <div className="search-area">
                 <form onSubmit={this.handleSubmit}>

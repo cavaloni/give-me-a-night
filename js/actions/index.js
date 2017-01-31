@@ -9,7 +9,6 @@ const document = require('global/document');
 const element = document.createElement('div')
 const places = new google.maps.places.PlacesService(element)
 
-
 export const FETCH_SUCCESS = 'FETCH_SUCCESS';
 export const fetchSuccess = (results, provider) => ({
     type: FETCH_SUCCESS,
@@ -44,6 +43,13 @@ export const noResults = provider => ({
     provider
 })
 
+export const CURRENT_CLICKED_BOX = 'CURRENT_CLICKED_BOX';
+export const currentClickedBox = (num, eventType) => ({
+    type: CURRENT_CLICKED_BOX,
+    num,
+    eventType
+})
+
 export const fetchZomato = (loc, feel) => dispatch => {
     let query;
     let order;
@@ -58,9 +64,8 @@ export const fetchZomato = (loc, feel) => dispatch => {
 
     let cityGeo;
 
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         geocoder.google(loc).then((response) => {
-            console.log('geo encoder responts', response)
             cityGeo = response;
             resolve();
         })
@@ -191,7 +196,6 @@ export const fetchBandsInTown = (loc, feel) => dispatch => {
 }
 
 export const fetchEventBrite = (loc, feel, attempt2) => dispatch => {
-    console.log(feel);
     
     let query;
     let catQuery;
@@ -239,19 +243,11 @@ export const fetchEventBrite = (loc, feel, attempt2) => dispatch => {
     }).then((data) => {
         return data.json();
     }).then(response => {
-        console.log(response);
-        console.log(response.events);
-        console.log(!feel);
         if (response.events  === undefined && !attempt2) {
-            console.log('-----------------------------');
-            console.log('this happened');
-            console.log(!feel);
             counter++
             return dispatch(fetchEventBrite(loc, null, true))
         }
         if (response.error && !feel) {
-            console.log('-----------------------------');
-            console.log('and then this happened');
             dispatch(noResults('ebResults'));
             return
         }
