@@ -1,10 +1,8 @@
 var path = require('path');
-
 var webpack = require('webpack');
-
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 const context = path.resolve(__dirname, 'js');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 require('babel-core/register')({
   presets: ['es2015', 'react']
@@ -40,6 +38,7 @@ module.exports = {
           'css-loader?importLoader=1&modules&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
         ],
     }, 
+    { test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/, loader: require.resolve("file-loader") + "?name=../[path][name].[ext]"},
     {   
         test: /\.js$/,
         include: path.resolve(__dirname, 'js'),
@@ -47,6 +46,7 @@ module.exports = {
         presets: ['es2015', 'react'],
       query: {
          plugins: [
+           
             'transform-react-jsx',
             [
               'react-css-modules',

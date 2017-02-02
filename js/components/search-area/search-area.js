@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-
 import {connect} from 'react-redux';
-
-import * as actions from '../actions/index';
-
+import * as actions from '../../actions/index';
 import {browserHistory} from 'react-router';
+import styles from './styles.css';
+
 
 export class SearchArea extends Component {
     constructor(props) {
@@ -27,11 +26,11 @@ export class SearchArea extends Component {
 
         browserHistory.push('/results');
     }
-
+//butt
     render() {
         
         return (
-            <div className="search-area">
+            <div styleName="styles.search-area">
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Where you at?

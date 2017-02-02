@@ -133,7 +133,7 @@ export const appReducer = (state = initialState, action) => {
                 action.photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"
             }
             let card = action.id;
-            const updatedState = immutable.set(state, `eventsoDisplay.${card}.zomatoResults.image`, action.photo)
+            const updatedState = immutable.set(state, `eventsToDisplay.${card}.zomatoResults.image`, action.photo);            
             return updatedState
 
         case 'NO_RESULTS':

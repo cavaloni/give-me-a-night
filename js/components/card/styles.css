@@ -1,0 +1,54 @@
+.card {
+    font-size: 15px;
+    width: 23%;
+    height: 90%;
+    float: left;
+    display: inline-block;
+    margin: 4px;
+}
+
+img {
+    border-radius: 10px;
+    height: 100px;
+    width: 100px;
+    margin: 10px calc(50% - 50px);
+    box-shadow: 1px 3px 10px;
+}
+
+.card>span {
+    display: table;
+    margin: 0 auto;
+}
+
+.card0 {
+    background-color: rgba(214, 94, 45, .6);
+}
+
+.card1 {
+    background-color: rgba(112, 94, 68, .6);
+}
+
+.card2 {
+    background-color: rgba(101, 219, 167, .6);
+}
+
+.card3 {
+    background-color: rgba(18, 163, 59, .6);
+}
+
+h3 {
+    margin: 2px auto;
+    text-align: center;
+}
+
+@media only screen and (max-width: 540px) {
+    .card {
+        width: 46%;
+        height: 48%;
+    }
+    .card>img {
+        height: 70px;
+        width: 70px;
+        margin: 10px calc(50% - 35px);
+    }
+}

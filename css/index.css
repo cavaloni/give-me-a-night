@@ -1,15 +1,15 @@
-.card {
-    display: inline-block;
-    width: 25%;
-    height: 200px;
+*{
+      font-family: 'Arsenal', sans-serif;
 }
 
-.card>img {
-    width: 90%;
-    height: 90%;
+body, html {
+  height: 100%;
+  margin: 0;
 }
 
-.results-box {
-    border: 1px solid black;
+#app {
+  background: url(../../../assets/img/city.jpg);
+  overflow: visible;
+  background-size: cover;
+  min-height: 100%;
 }
-

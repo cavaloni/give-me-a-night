@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import SearchArea from './search-area';
+import SearchArea from '../search-area/search-area';
 
 import {connect} from 'react-redux';
-
+import styles from './styles.css';
 
 export class App extends Component {
     constructor(props) {
@@ -11,8 +11,10 @@ export class App extends Component {
     render() {
         console.log(this.props);
         return (
-            <div className="app">
-                <div className="banner"/>                
+            <div>
+            <div styleName="styles.logo">Give Me A Night</div>
+                <div styleName="styles.banner"/>  
+                    
                 <SearchArea />
                 {this.props.children}
             </div>
@@ -23,3 +25,5 @@ export class App extends Component {
 const mapStatetoProps = (state, props) => ({eventsToDisplay: state.eventsToDisplay, search: state.search});
 
 export default connect(mapStatetoProps)(App)
+
+        //   

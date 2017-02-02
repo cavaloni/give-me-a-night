@@ -3,9 +3,8 @@ require('babel-polyfill');
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './components/app';
-import SearchArea from './components/search-area';
-import ResultBox from './components/results';
+import App from './components/app/app';
+
 import InfoBox from './components/info_box/info_box';
 import ResultContainer from './components/results-container';
 

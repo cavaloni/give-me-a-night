@@ -1,5 +1,5 @@
 import React from 'react';
-import ResultBox from './results';
+import ResultBox from './results/results';
 import InfoBox from './info_box/info_box';
 import {connect} from 'react-redux';
 

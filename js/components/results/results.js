@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import * as actions from '../actions/index';
-import Card from './card';
-import InfoBox from './info_box/info_box';
+import * as actions from '../../actions/index';
+import Card from '../card/card';
+import InfoBox from '../info_box/info_box';
 import {browserHistory} from 'react-router';
+import styles from './styles.css'
 
 export class ResultBox extends Component {
     constructor(props) {
@@ -14,7 +15,6 @@ export class ResultBox extends Component {
     }
 
     getRestImages(nextProps) {
-        console.log('fucking again');
         this
             .props
             .dispatch(actions.fetchImages(nextProps.results.zomatoResults.location, nextProps.results.zomatoResults.title, nextProps.id))
@@ -41,8 +41,7 @@ export class ResultBox extends Component {
             title: movieResults.title
         }
 
-        let concert;
-        concert = {
+        const concert = {
             image: bitResults.image === null
                 ? 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQEr_CovLbfaLjHIo6JgUfkfVKm' +
                         '50Y6yHynVdAALkf4OI__HNDwFQ'
@@ -50,27 +49,28 @@ export class ResultBox extends Component {
             title: bitResults.title
         }
 
-        // ebResults.image === null     ebResults.image =
-        // 'http://www.e-xinergia.com/xframework/app/frontend/view/imgs//slides/slide_ven
-        // ta_entradas.png'
-
         const event = {
             image: ebResults.image || 'http://www.e-xinergia.com/xframework/app/frontend/view/imgs//slides/slide_venta_' +
                     'entradas.png',
             title: ebResults.title
         }
 
+        let cardNumInt = Number(this.props.id)
+        cardNumInt = cardNumInt + 1
+
         return (
 
-            <div key={this.props.id} className="results-box">
-
-                <Card evtType="zomatoResults" evtImg={zomatoResults.image} evtName={zomatoResults.title} cardNum={this.props.id}/>
-                <Card evtType="movieResults" evtImg={movie.image} evtName={movie.title} cardNum={this.props.id}/>
-                <Card evtType="bitResults" evtImg={concert.image} evtName={concert.title} cardNum={this.props.id}/>
-                <Card evtType="ebResults" evtImg={event.image} evtName={event.title} cardNum={this.props.id}/>
+            <div key={this.props.id} styleName="styles.results-box">
+                <h2 styleName="styles.option"> Night {cardNumInt} </h2>
+                <Card title="Restaurant" evtType="zomatoResults" evtImg={zomatoResults.image} evtName={zomatoResults.title} cardNum="0"/>
+                <Card title="Movie" evtType="movieResults" evtImg={movie.image} evtName={movie.title} cardNum="1"/>
+                <Card title="Music Show" evtType="bitResults" evtImg={concert.image} evtName={concert.title} cardNum="2"/>
+                <Card title="Local Event" evtType="ebResults" evtImg={event.image} evtName={event.title} cardNum="3"/>
             </div>
         )
     }
 }
+
+//butt
 
 export default connect()(ResultBox);

@@ -1,0 +1,33 @@
+.results-box {
+    width: 90%;
+    height: 220px;
+    margin: 30px auto;   
+    padding-top: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.results-box::before {
+    content:'';
+    width:100%;
+    position: absolute;
+    left:0;
+    top: -1px;
+    height: 1px;
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%, hsla(0, 0%, 0%, .75)), color-stop(50%, hsla(0, 0%, 0%, 0)), color-stop(100%, hsla(0, 0%, 0%, .75)))
+}
+
+.option {
+    color: white;
+    text-align: center;
+    top: -45px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+
+@media only screen and (max-width: 540px) {
+    .results-box {
+        height: 400px;
+    }
+}
