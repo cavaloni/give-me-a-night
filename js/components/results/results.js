@@ -4,34 +4,52 @@ import * as actions from '../../actions/index';
 import Card from '../card/card';
 import InfoBox from '../info_box/info_box';
 import {browserHistory} from 'react-router';
-import styles from './styles.css'
+import styles from './styles.css';
+import {Observable} from 'rxjs/Rx'
+import immutable from 'object-path-immutable';
 
 export class ResultBox extends Component {
     constructor(props) {
         super(props)
-        this.getRestImages = this
-            .getRestImages
-            .bind(this);
-    }
-
-    getRestImages(nextProps) {
-        this
-            .props
-            .dispatch(actions.fetchImages(nextProps.results.zomatoResults.location, nextProps.results.zomatoResults.title, nextProps.id))
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.results.hasOwnProperty('zomatoResults') && nextProps.results.zomatoResults.image === '') {
-                
-                this.getRestImages(nextProps);
+        this.state = {
+            renderList: {
+                card0: false,
+                card1: false,
+                card2: false,
+                card3: false
+            }
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.cascadeRender();
+    };
+
+    componenWillMount() {
+        this.cascadeRender();
+    }
+
+    cascadeRender() {
+        var interval = Observable
+            .interval(150)
+            .take(4);
+        interval.subscribe(x => {
+            this.setState(immutable.set(this.state, `renderList.card${x}`, this.props.cardSideState))
+        })
+    };
+
     render() {
+
+        console.log(this.state);
+
         const {zomatoResults, ebResults, bitResults, movieResults} = this.props.results;
 
-        if (!bitResults) {
+        if (!bitResults || !zomatoResults || !ebResults || !movieResults) {
             return <div></div>
+        }
+
+        if (zomatoResults.image === '') {
+            zomatoResults.image === 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
         }
 
         const noResultsImage = 'http://topradio.com.ua/static/images/sad-no-results.png'
@@ -42,10 +60,10 @@ export class ResultBox extends Component {
         }
 
         const concert = {
-            image: bitResults.image === null
+            image: bitResults.image === undefined
                 ? 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQEr_CovLbfaLjHIo6JgUfkfVKm' +
                         '50Y6yHynVdAALkf4OI__HNDwFQ'
-                : bitResults.image.medium.url,
+                : bitResults.image,
             title: bitResults.title
         }
 
@@ -56,21 +74,53 @@ export class ResultBox extends Component {
         }
 
         let cardNumInt = Number(this.props.id)
-        cardNumInt = cardNumInt + 1
 
         return (
 
             <div key={this.props.id} styleName="styles.results-box">
-                <h2 styleName="styles.option"> Night {cardNumInt} </h2>
-                <Card title="Restaurant" evtType="zomatoResults" evtImg={zomatoResults.image} evtName={zomatoResults.title} cardNum="0"/>
-                <Card title="Movie" evtType="movieResults" evtImg={movie.image} evtName={movie.title} cardNum="1"/>
-                <Card title="Music Show" evtType="bitResults" evtImg={concert.image} evtName={concert.title} cardNum="2"/>
-                <Card title="Local Event" evtType="ebResults" evtImg={event.image} evtName={event.title} cardNum="3"/>
+                <h2 styleName="styles.option">
+                    Night {cardNumInt}
+                </h2>
+                <Card
+                    resultsBoxNum={this.props.id}
+                    title="Restaurant"
+                    evtType="zomatoResults"
+                    evtImg={zomatoResults.image}
+                    evtName={zomatoResults.title}
+                    key="0"
+                    cardNum="0"
+                    flippy={this.state.renderList.card0}/>
+                <Card
+                    resultsBoxNum={this.props.id}
+                    title="Movie"
+                    evtType="movieResults"
+                    evtImg={movie.image}
+                    evtName={movie.title}
+                    key="1"
+                    cardNum="1"
+                    flippy={this.state.renderList.card1}/>
+                <Card
+                    resultsBoxNum={this.props.id}
+                    title="Music Show"
+                    evtType="bitResults"
+                    evtImg={concert.image}
+                    evtName={concert.title}
+                    key="2"
+                    cardNum="2"
+                    flippy={this.state.renderList.card2}/>
+                <Card
+                    resultsBoxNum={this.props.id}
+                    title="Local Event"
+                    evtType="ebResults"
+                    evtImg={event.image}
+                    evtName={event.title}
+                    key="3"
+                    cardNum="3"
+                    flippy={this.state.renderList.card3}/>;
             </div>
         )
     }
 }
 
-//butt
 
 export default connect()(ResultBox);

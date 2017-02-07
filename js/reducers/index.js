@@ -27,13 +27,11 @@ function eventRandomizer(events, not) {
 }
 
 const initialState = {
-    zomatoResults: {},
-    movieResults: {},
-    bitResults: {},
-    ebResults: {},
     search: {},
     eventsToDisplay: [{}, {}, {}],
-    clickedBox: {}
+    clickedBox: {},
+    cardSideIsFront: false,
+    flipperState: false
 }
 
 const dataPaths = {
@@ -65,7 +63,7 @@ const dataPaths = {
         score: 'popularity'
     },
     bitResults: {
-        image: 'image',
+        image: 'image.medium.url',
         title: 'title',
         location: 'venue_name',
         description: 'description',
@@ -78,44 +76,48 @@ const dataPaths = {
 export const appReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'FETCH_SUCCESS':
+        let bigObj = {eventsToDisplay: [{}, {}, {}]};
+        
+            let res;
+            let returnObj = {eventsToDisplay: [{}, {}, {}]};
+            for (res in action.results) {
+                let provider = res;
+                let results = action.results[res];
+                let newEventToAddIndex = undefined;
+                let indecesOfDisplayed = [];
+                let eventToAddIndex;
+                let tempObj = {};
+                
+                let eventToAdd;
 
-            let indecesOfDisplayed = [];
-            let tempObj = {};
-            let returnObj = {};
-            let eventToAdd;
-            let eventToAddIndex;
-            let newEventToAddIndex;
-
-            returnObj.eventsToDisplay = state
-                .eventsToDisplay
-                .map((resultsList) => {
-                    eventToAddIndex = eventRandomizer(action.results);
+            for (i = 0; i <= 2; i++) {
+                    eventToAddIndex = eventRandomizer(results);
                     indecesOfDisplayed.forEach((index) => {
                         if (eventToAddIndex === index) {
-                            newEventToAddIndex = eventRandomizer(action.results, eventToAddIndex);
+                            newEventToAddIndex = eventRandomizer(results, eventToAddIndex);
                             eventToAddIndex = newEventToAddIndex;
-                            eventToAdd = action.results[eventToAddIndex];
+                            eventToAdd = results[eventToAddIndex];
                             indecesOfDisplayed.push(eventToAddIndex);
                             return
                         }
                     });
 
-                    eventToAdd = action.results[eventToAddIndex];
-                    tempObj[action.provider] = {};
+                    eventToAdd = results[eventToAddIndex];
+                    tempObj[provider] = {};
                     let key;
                     for (key in dataPaths.ebResults) {
-                        if (dataPaths[action.provider][key] === undefined) {
-                            tempObj[action.provider][key] = undefined;
+                        if (dataPaths[provider][key] === undefined) {
+                            tempObj[provider][key] = undefined;
                             continue
                         }
-                        tempObj[action.provider][key] = objectPath.get(eventToAdd, dataPaths[action.provider][key]);
+                        tempObj[provider][key] = objectPath.get(eventToAdd, dataPaths[provider][key]);
                     }
                     indecesOfDisplayed.push(eventToAddIndex);
-                    return Object.assign({}, resultsList, tempObj);
-                });
-
-            returnObj[action.provider] = action.results;
-            return Object.assign({}, state, returnObj);
+                    objectPath.set(bigObj, `eventsToDisplay.${i}.${provider}`, tempObj[provider])
+                };
+            }         
+        let fetchObj = immutable.set(state, 'eventsToDisplay', bigObj.eventsToDisplay)
+         return fetchObj
 
         case 'FETCH_FAILURE':
             console.log(action.err);
@@ -154,6 +156,8 @@ export const appReducer = (state = initialState, action) => {
             const updatedClickedState = immutable.set(state, 'clickedBox', clickedState)
             return updatedClickedState
 
+        case 'TOGGLE_CARD_SIDES' :
+            return immutable.set(state, 'cardSideIsFront', !state.cardSideIsFront)
         default:
 
             return state

@@ -13,6 +13,8 @@ export class InfoBox extends Component {
 
     render() {
         
+        console.log(this.props);
+
         if (this.props.eventsToDisplay[0].bitResults === undefined) {
             return (<div/>)
         }

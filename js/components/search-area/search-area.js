@@ -17,13 +17,9 @@ export class SearchArea extends Component {
         e.preventDefault();
         const loc = this.location.value;
         const feel = this.feeling.value;
-        
+        // this.props.dispatch(actions.resetFlippers())
         this.props.dispatch(actions.search(loc, feel));
-        this.props.dispatch(actions.fetchZomato(loc, feel));
-        this.props.dispatch(actions.fetchMovies(loc, feel));
-        this.props.dispatch(actions.fetchBandsInTown(loc, feel));
-        this.props.dispatch(actions.fetchEventBrite(loc, feel));
-
+        this.props.dispatch(actions.fetchResults(loc, feel));
         browserHistory.push('/results');
     }
 //butt

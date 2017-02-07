@@ -67,6 +67,7 @@
     "babel-plugin-react-css-modules": "^2.2.0",
     "babel-preset-react": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
+    "classnames": "^2.2.5",
     "css-loader": "^0.26.1",
     "fetch-jsonp": "^1.0.5",
     "file-loader": "^0.10.0",
@@ -94,6 +95,7 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
+    "rxjs": "^5.1.0",
     "style-loader": "^0.13.1",
     "whatwg-fetch": "^2.0.2"
   }
