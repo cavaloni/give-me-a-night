@@ -2,6 +2,9 @@ import fetch from 'isomorphic-fetch';
 import moment from 'moment';
 import geocoder from 'geocoder-geojson'
 import {Observable} from 'rxjs/Rx';
+import "rxjs/add/operator/catch";
+import {dataPaths} from '../reducers/index';
+import immutable from 'object-path-immutable';
 
 //google JS API
 const google = window.google;
@@ -37,20 +40,23 @@ export const currentClickedBox = (num, eventType) => ({type: CURRENT_CLICKED_BOX
 export const TOGGLE_CARD_SIDES = 'TOGGLE_CARD_SIDES';
 export const toggleCardSides = () => ({type: TOGGLE_CARD_SIDES})
 
-// export const RESET_FLIPPERS = 'RESET_FLIPPERS';
-// export const resetFlippers = () => ({type: RESET_FLIPPERS})
+export const TOGGLE_SEARCHING = 'TOGGLE_SEARCHING';
+export const toggleSearching = () => ({type: TOGGLE_SEARCHING})
 
-// export const FLIPPERS_ON = 'FLIPPERS_ON';
+// export const RESET_FLIPPERS = 'RESET_FLIPPERS'; export const resetFlippers =
+// () => ({type: RESET_FLIPPERS}) export const FLIPPERS_ON = 'FLIPPERS_ON';
 // export const flippersOn = () => ({type: FLIPPERS_ON})
 
 export const fetchResults = (loc, feel) => dispatch => {
 
     let returnedItems = {
-        zomatoResults : [],
-        ebResults : [],
-        bitResults : [],
-        movieResults : []
+        zomatoResults: [],
+        ebResults: [],
+        bitResults: [],
+        movieResults: []
     };
+
+//--------URL processing from location and feeling
 
     let query;
     let order;
@@ -69,6 +75,7 @@ export const fetchResults = (loc, feel) => dispatch => {
         geocoder
             .google(loc)
             .then((response) => {
+                console.log(response);
                 cityGeo = response;
                 resolve();
             })
@@ -143,13 +150,14 @@ export const fetchResults = (loc, feel) => dispatch => {
                 where: loc,
                 "date": dateNow,
                 page_size: 5,
-                sort_order: "popularity"
+                sort_order: "popularity",
+                category: 'Concerts &amp; Tour Dates'
             };
         })(loc, feel)
 
         console.log(bandsInTownArgs);
 
-        const eventBriteUrl = ((loc, feel, attempt2) => {
+        const eventBriteUrl = (loc, feel) => {
 
             let query;
             let catQuery;
@@ -187,9 +195,15 @@ export const fetchResults = (loc, feel) => dispatch => {
                 locationQuery = `${cityQuery[0]}+${cityQuery[1]}%2C+${cityQuery[2]}`
             }
 
-            console.log(locationQuery);
             return `https://www.eventbriteapi.com/v3/events/search/?location.address=${locationQuery}&location.within=30mi&${catQuery}start_date.keyword=today&token=6SVNTPUPXW5HGNKP5ZGW`
-        })(loc, feel)
+        }
+
+        const eventBriteUrlAtmpt2 = eventBriteUrl(loc, null) //EventBrite needs 2 attempts
+                                                             //because often first search returns 
+                                                             //no results
+        //-------
+        //-------Fetches
+        //-------
 
         const fetchZomato = fetch(zomatoUrl, {
             headers: {
@@ -216,7 +230,6 @@ export const fetchResults = (loc, feel) => dispatch => {
         })
 
         const fetchBandsInTown = new Promise((resolve, reject) => {
-            console.log(bandsInTownArgs);
             EVDB
                 .API
                 .call("/events/search", bandsInTownArgs, function (oData) {
@@ -229,214 +242,148 @@ export const fetchResults = (loc, feel) => dispatch => {
                 })
         })
 
-        const fetchEventBrite = fetch(eventBriteUrl, {
-            // "data": {     "near": city }
+        const fetchEventBrite = 
+        fetch(eventBriteUrl(loc, feel), {
         }).then((data) => {
             return data.json();
         }).then(response => {
-            if (response.events === undefined && !attempt2) {
-                counter++ 
-                return eventBriteUrl(loc, null, true)
-            }
-            if (response.error && !feel) {
-                dispatch(noResults('ebResults'));
-                return
-            }
+            console.log(response.events);
+            if (response.events.length === 0) {
+                throw new Error('no ebResults 1')
+            } else {
             return response.events
-        }).catch(err => {
-            console.log(err);
+            }
         })
 
-        function getGooglePhotos1 (rest){ 
+        const fetchEventBriteAtmpt2 = 
+        fetch(eventBriteUrlAtmpt2, {
+        }).then((data) => {
+            return data.json();
+        }).then(response => {
+            console.log(response.events);
+            if (response.events.length === 0) {
+                throw new Error('no ebResults 2')
+            } else {
+            return response.events
+        }
+        })
+
+        function getGooglePhotos1(rest) {
             return new Promise((resolve, reject) => {
-                    if (rest.restaurant.featured_image !== '') {                
+                if (rest.restaurant.featured_image !== '') {
+                    resolve(rest)
+                }
+                let placeID = '';
+                autocomplete.getPlacePredictions({
+                    input: rest.restaurant.location.address + ' ' + rest.restaurant.name
+                }, (results, status) => {
+                    if (status !== 'OK' || results === null) {
+                        console.log(results);
+                        console.log(status);
+                        const photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"
+                        rest.restaurant.featured_image = photo
                         resolve(rest)
+                        return
                     }
-                    let placeID = '';
-                    autocomplete.getPlacePredictions({
-                        input: rest.restaurant.location.address + ' ' + rest.restaurant.name
+                    placeID = results[0].place_id;
+                    places.getDetails({
+                        placeId: placeID
                     }, (results, status) => {
-                        if (status !== 'OK' || results === null) {
-                            console.log(results);
-                            console.log(status);
-                            const photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"        
-                            rest.restaurant.featured_image = photo                            
+                        if (!results.photos) {
+                            const photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"
+                            rest.restaurant.featured_image = photo
                             resolve(rest)
                             return
                         }
-                        placeID = results[0].place_id;
-                        places.getDetails({
-                            placeId: placeID
-                        }, (results, status) => {
-                            if (!results.photos) {
-                                const photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"            
-                                rest.restaurant.featured_image = photo                                
-                                resolve(rest)
-                                return
-                            }
-                            const photo = results
-                                .photos[0]
-                                .getUrl({'maxWidth': 300, 'maxHeight': 300})            
-                            rest.restaurant.featured_image = photo                            
-                            resolve(rest)
-                        })
-                    });
-                })
+                        const photo = results
+                            .photos[0]
+                            .getUrl({'maxWidth': 300, 'maxHeight': 300})
+                        rest.restaurant.featured_image = photo
+                        resolve(rest)
+                    })
+                });
+            })
         }
 
         const zomatoObs = Observable.fromPromise(fetchZomato);
         const movieObs = Observable.fromPromise(fetchMovies);
-        const bandsInTownObs = Observable.fromPromise(fetchBandsInTown)
-        const eventbriteObs = Observable.fromPromise(fetchEventBrite)
+        const bandsInTownObs = Observable.fromPromise(fetchBandsInTown);
+        const eventbriteObs = Observable.fromPromise(fetchEventBrite);
+        const eventbriteObs2 = Observable.fromPromise(fetchEventBriteAtmpt2)
 
-        let observerArr = [];
         let errored = [];
 
         movieObs.subscribe(x => {
-            console.log(x);
             returnedItems.movieResults = x;
         }, err => {
             errored.push('movieResults')
-        }, () => {
-            console.log('completed');
         })
 
         bandsInTownObs.subscribe(x => {
-            returnedItems.bitResults = x;
             console.log(x);
+            returnedItems.bitResults = x;
         }, err => {
             console.log(err);
             errored.push('bitResults')
-        }, () => {
-            console.log('completed');
         })
 
         zomatoObs.subscribe(x => {
-            console.log(x);
             if (x.length === 0) {
                 errored.push('zomatoResults')
             }
             returnedItems.zomatoResults = x;
         }, err => {
             errored.push('zomatoResults')
-        }, () => {
-            console.log('zoms completed');
         })
 
-        eventbriteObs.subscribe((x) => {
+        const eventBrite2Attempts = Observable.of(
+                eventbriteObs,
+                eventbriteObs2
+            ).reduce((ob1, ob2) => ob1.catch(() => ob2), Observable.throw(''))
+            .mergeAll()
+
+        eventBrite2Attempts.subscribe(x => {
             console.log(x);
-            if (x.length === 0) {
-                errored.push('ebResults');
-            }
-            returnedItems.ebResults = x;
-        }, err =>  {
-            errored.push('ebResults');
-         }, () => { 
-            console.log('completed');
-        } )        
+            returnedItems.ebResults = x},
+            err => {
+                errored.push('ebResults')})
 
         const zomatoResults = zomatoObs.flatMap(x => {
             return Observable.from(x)
         })
-        
+
         const googlePhotosObs = zomatoResults
             .take(5)
             .flatMap(rest => {
-            return Observable.fromPromise(getGooglePhotos1(rest))
-        })
-        
+                return Observable.fromPromise(getGooglePhotos1(rest))
+            })
+
         returnedItems.zomatoResults = [];
         googlePhotosObs.subscribe(rest => {
-            returnedItems.zomatoResults.push(rest)
-    }, err => {console.log(err);})
-
-//----------------------------
+            returnedItems
+                .zomatoResults
+                .push(rest)
+        }, err => {
+            console.log(err);
+        })
 
         const allFetchDataObservable = Observable.onErrorResumeNext(movieObs, bandsInTownObs, eventbriteObs, zomatoObs, googlePhotosObs)
 
         allFetchDataObservable
         .finally(() => {
-            console.log(returnedItems);
-            console.log(errored);
+            errored.forEach((provider) => {
+                returnedItems = immutable.set(returnedItems, `${provider}.0.${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png');
+                returnedItems = immutable.set(returnedItems, `${provider}.0.${dataPaths[provider].title}`, 'Small Town?')
+            });
             dispatch(fetchSuccess(returnedItems));
-            dispatch(toggleCardSides());
-            errored.forEach(err => dispatch(noResults(err)))
-        })
-        .subscribe(x => {
+            dispatch(toggleCardSides());      
+            dispatch(toggleSearching());
+        }).subscribe(x => {
             console.log('non error: ' + x);
         }, err => {
             console.log('error on merge: ' + err);
         })
 
-        // const finalAdd = allFetchDataObservable
-        // .finally(() => {
-        //     console.log(returnedItems);
-        //     console.log(errored);
-        //     dispatch(fetchSuccess(returnedItems));
-        //     dispatch(toggleCardSides());
-        //     errored.forEach(err => dispatch(noResults(err)))
-        // })
-
-        // finalAdd.subscribe(x => {
-        //     console.log(x);
-        // })
-
-        // const zomsImagesStuff = returnedItems.zomatoResults
-        //     let promises = getGooglePhotos(zomsImagesStuff);
-        //     Promise
-        //         .all(promises)
-        //         .then(() => {
-        //             dispatch(fetchSuccess(returnedItems));
-        //             dispatch(toggleCardSides());
-        //         })
-
-        // function getGooglePhotos(items) {
-        //     let zomsLength = items.length;
-        //     if (zomsLength > 4) {zomsLength = 4}
-        //     let promises = [];
-        //     for (i = 0; i < zomsLength; i++) {  
-        //         let origRest;
-        //         let rest = items[i];
-        //         let aPromise = new Promise((resolve, reject) => {
-        //             if (rest.restaurant.featured_image !== '') {
-        //                 returnedItems.zomatoResults[i] = rest
-        //                 resolve()
-        //             }
-        //             console.log(rest);
-        //             console.log(returnedItems);
-        //             let placeID = '';
-        //             autocomplete.getPlacePredictions({
-        //                 input: rest.restaurant.location.address + ' ' + rest.restaurant.name
-        //             }, (results, status) => {
-        //                 if (status !== 'OK') {
-        //                     console.log(status);
-        //                     const photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"
-        //                     rest.restaurant.featured_image = photo
-        //                     returnedItems.zomatoResults[i] = rest
-        //                     resolve()
-        //                 }
-        //                 placeID = results[0].place_id;
-        //                 places.getDetails({
-        //                     placeId: placeID
-        //                 }, (results, status) => {
-        //                     if (!results.photos) {
-        //                         const photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"
-        //                         rest.restaurant.featured_image = photo
-        //                         returnedItems.zomatoResults[i] = rest
-        //                         resolve()
-        //                     }
-        //                     const photo = results
-        //                         .photos[0]
-        //                         .getUrl({'maxWidth': 300, 'maxHeight': 300})
-        //                     rest.restaurant.featured_image = photo
-        //                     returnedItems.zomatoResults[i] = rest
-        //                     resolve()
-        //                 })
-        //             });
-        //         })
-        //         promises.push(aPromise)
-        //     }
-        //     return promises
-        // }
     })
 }
+//butt

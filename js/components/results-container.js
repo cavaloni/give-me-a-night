@@ -4,22 +4,24 @@ import InfoBox from './info_box/info_box';
 import {connect} from 'react-redux';
 import {Observable} from 'rxjs/Rx';
 import immutable from 'object-path-immutable';
+import {RouteTransition} from 'react-router-transition';
+import {spring} from 'react-motion';
 
 export class ResultsContainer extends Component {
     constructor(props) {
         super(props)
         this.state = {
             renderList: {
-                list0: false,
-                list1: false,
-                list2: false
+                list0: true,
+                list1: true,
+                list2: true
             }
         }
     }
-    
+
     cascadeRender() {
         var interval = Observable
-            .interval(140)
+            .interval(50)
             .take(3);
         interval.subscribe(x => {
             this.setState(immutable.set(this.state, `renderList.list${x}`, this.props.cardSideIsFront))
@@ -35,22 +37,52 @@ export class ResultsContainer extends Component {
     }
 
     render() {
-        
+
         return (
-        <div>
-            <ResultBox results={this.props.eventsToDisplay[0]} id="1" cardSideState={this.state.renderList.list0}/>
-            <ResultBox results={this.props.eventsToDisplay[1]} id="2" cardSideState={this.state.renderList.list1}/>
-            <ResultBox results={this.props.eventsToDisplay[2]} id="3" cardSideState={this.state.renderList.list2}/>
-            {this.props.children}
-        </div>
-    )
-}
+            <div>
+                <ResultBox
+                    results={this.props.eventsToDisplay[0]}
+                    id="1"
+                    cardSideState={this.state.renderList.list0}/>
+                <ResultBox
+                    results={this.props.eventsToDisplay[1]}
+                    id="2"
+                    cardSideState={this.state.renderList.list1}/>
+                <ResultBox
+                    results={this.props.eventsToDisplay[2]}
+                    id="3"
+                    cardSideState={this.state.renderList.list2}/>
+                <RouteTransition
+                    style={{position: 'absolute'}}
+                    component={false}
+                    pathname={this.props.location.pathname}
+                    atEnter={{
+                    scaleZ: -100,
+                    opacity: 0,
+                    opacity1: 0
+                }}
+                    atLeave={{
+                    scaleZ: -100,
+                    opacity: 0,
+                    opacity1: 0
+                }}
+                    atActive={{
+                    scaleZ: .01,
+                    opacity: 1,
+                    opacity1: .5
+                }}
+                >
+                   
+
+                    {this.props.children}
+                </RouteTransition>
+            </div>
+        )
+    }
 }
 
-const mapStatetoProps = (state, props) => (
-    {eventsToDisplay: state.eventsToDisplay, 
-    search: state.search,
-    cardSideIsFront: state.cardSideIsFront
-});
+const mapStatetoProps = (state, props) => ({eventsToDisplay: state.eventsToDisplay, search: state.search, cardSideIsFront: state.cardSideIsFront});
 
 export default connect(mapStatetoProps)(ResultsContainer)
+
+ // mapStyles={styles => ({transform: `translateX(${styles.translateX}%)`})}>

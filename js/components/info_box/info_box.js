@@ -2,18 +2,30 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import styles from './styles.css';
 import {browserHistory} from 'react-router';
+import {Modal} from 'react-overlays';
 
-//butt
+const modalStyle = {
+    position: 'fixed',
+    zIndex: 1040,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+};
+
+const backdropStyle = {
+    ...modalStyle,
+    zIndex: 'auto',
+    backgroundColor: '#000',
+    opacity: 0.5
+};
+
 export class InfoBox extends Component {
     constructor(props) {
         super(props)
     }
 
-    
-
     render() {
-        
-        console.log(this.props);
 
         if (this.props.eventsToDisplay[0].bitResults === undefined) {
             return (<div/>)
@@ -25,47 +37,80 @@ export class InfoBox extends Component {
         let score;
         let link;
         let image;
-    
-        
+
         const evtType = this.props.clickedBox.eventType;
-        console.log(evtType);
 
         if (evtType === 'bitResults' || evtType === 'ebResults' || evtType === 'zomatoResults') {
-            location  = <div>Location: {thisInfo.location}</div>
+            location = <div>Location: {thisInfo.location}</div>
             link = thisInfo.link;
             image = thisInfo.image;
-        } else {location = <div/>}
+        } else {
+            location = <div/>
+        }
         if (evtType === 'ebResults' || evtType === 'bitResults') {
-            startTime = <div>Start Time: {thisInfo.startTime} </div>
+            startTime = <div>Start Time: {thisInfo.startTime}
+            </div>
             link = thisInfo.link;
             image = thisInfo.image;
-        } else {startTime = <div/>}
+        } else {
+            startTime = <div/>
+        }
         if (evtType === 'zomatoResults' || evtType === 'movieResults') {
-            score = <div>Score: {thisInfo.score} </div>
+            score = <div>Score: {thisInfo.score.aggregate_rating}/5
+            </div>
             link = thisInfo.link;
             image = thisInfo.image;
-        } else {score = <div/>}
+        } else {
+            score = <div/>
+        }
         if (evtType === 'movieResults') {
-            const movieName = thisInfo.title.replace(/[ ]/g, '+');
+            const newScore = thisInfo
+                .score
+                .toString()
+                .slice(0, 4)
+            score = <div>Score: {newScore}/10
+            </div>
+            const movieName = thisInfo
+                .title
+                .replace(/[ ]/g, '+');
             link = `https://www.rottentomatoes.com/search/?search=${movieName}`;
             image = `https://image.tmdb.org/t/p/w500${thisInfo.image}`;
         }
-
         return (
 
-            <div styleName={"styles.box"} onClick={browserHistory.goBack}>
-                <div styleName="styles.pop-up-box">
-                    <h2>{thisInfo.title}</h2>
-                    <img styleName="styles.box-img" src={image}/>
-                    <div styleName="styles.desc">Description: {thisInfo.description}</div>
-                    {location}
-                    {startTime}
-                    {score}
-                    <span>
-                        <a href={link}>More Information</a>
-                    </span>
+            <Modal
+                aria-labelledby='modal-label'
+                style={modalStyle}
+                backdropStyle={{
+                ...modalStyle,
+                zIndex: 'auto',
+                backgroundColor: '#000',
+                opacity: this.props.style.opacity1
+            }}
+                show={true}
+                onHide={browserHistory.goBack}
+                autoFocus={false}>
+                <div
+                    style={{
+                    transform: `perspective(500px) scaleZ(${this.props.style.scaleZ}) translateZ(200px)`,
+                    opacity: this.props.style.opacity
+                }}>
+                    <div styleName="styles.pop-up-box">
+                        <h2>{thisInfo.title}</h2>
+                        <img styleName="styles.box-img" src={image}/>
+                        <div styleName="styles.overflowBox">
+                            <div styleName="styles.desc">Description: {thisInfo.description}</div>
+                        </div>
+                        {location}
+                        {startTime}
+                        {score}
+                        <span>
+                            <a href={link} target="_blank">More Information</a>
+                        </span>
+                    </div>
                 </div>
-            </div>
+            </Modal>
+
         )
     }
 }

@@ -1,24 +1,41 @@
 .banner {
-  height: 8em;
-  background: url('../../../assets/img/sunset.jpg');
+  height: 11em;
+  background: rgba(48, 48, 48, 0.92);
   background-position-y: -200px;
   background-size: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 @media only screen and (max-width: 540px) {
   .banner {
     background-position-y: 0px;
   }
+  .city {
+        top: 85px;
+    }
 }
 
 .logo {
-  left: 10px;
+  left: 35%;
     position: absolute;
     font-size: 50px;
     font-family: Veneer;
     color: #d4d4d1;
     /* border-bottom: 2px solid lightgray; */
     z-index: 100;
+}
+
+.city {
+  left: 23px;
+  background: url('../../../assets/img/city.png');
+  position: absolute;
+  width: 25%;
+  height: 100px;
+  top: 43px;
+      z-index: 3;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .logo::before {

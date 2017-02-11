@@ -31,10 +31,10 @@ const initialState = {
     eventsToDisplay: [{}, {}, {}],
     clickedBox: {},
     cardSideIsFront: false,
-    flipperState: false
+    searching: false
 }
 
-const dataPaths = {
+export const dataPaths = {
     ebResults: {
         image: 'logo.url',
         title: 'name.text',
@@ -139,6 +139,8 @@ export const appReducer = (state = initialState, action) => {
             return updatedState
 
         case 'NO_RESULTS':
+            console.log('this happened');
+            console.log(action.provider);
             let stateCopy = JSON.parse(JSON.stringify(state));
             stateCopy.eventsToDisplay.forEach((list) => {
                 list[action.provider].image = 'http://topradio.com.ua/static/images/sad-no-results.png';
@@ -158,6 +160,9 @@ export const appReducer = (state = initialState, action) => {
 
         case 'TOGGLE_CARD_SIDES' :
             return immutable.set(state, 'cardSideIsFront', !state.cardSideIsFront)
+
+        case 'TOGGLE_SEARCHING' :
+            return immutable.set(state, 'searching', !state.searching)
         default:
 
             return state

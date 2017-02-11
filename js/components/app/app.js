@@ -9,14 +9,13 @@ export class App extends Component {
         super(props)
     }
     render() {
-        console.log(this.props);
         return (
             <div>
-            <div styleName="styles.logo">Give Me A Night</div>
-                <div styleName="styles.banner"/>  
-                    
-                <SearchArea />
-                {this.props.children}
+                <div styleName="styles.city"></div>
+                <div styleName="styles.logo">Give Me A Night</div>
+                <div styleName="styles.banner"/>
+
+                <SearchArea/> {this.props.children}
             </div>
         )
     }
@@ -26,4 +25,4 @@ const mapStatetoProps = (state, props) => ({eventsToDisplay: state.eventsToDispl
 
 export default connect(mapStatetoProps)(App)
 
-        //   
+//

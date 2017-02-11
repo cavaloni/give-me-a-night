@@ -28,19 +28,21 @@ export class ResultBox extends Component {
     componenWillMount() {
         this.cascadeRender();
     }
+    
 
     cascadeRender() {
+        let cards = [0,1,2,3];
+        if (this.props.cardSideState) {cards = cards.reverse()}
         var interval = Observable
             .interval(150)
             .take(4);
         interval.subscribe(x => {
-            this.setState(immutable.set(this.state, `renderList.card${x}`, this.props.cardSideState))
+            let card = cards[x];
+            this.setState(immutable.set(this.state, `renderList.card${card}`, this.props.cardSideState))
         })
     };
 
     render() {
-
-        console.log(this.state);
 
         const {zomatoResults, ebResults, bitResults, movieResults} = this.props.results;
 
@@ -116,7 +118,7 @@ export class ResultBox extends Component {
                     evtName={event.title}
                     key="3"
                     cardNum="3"
-                    flippy={this.state.renderList.card3}/>;
+                    flippy={this.state.renderList.card3}/>
             </div>
         )
     }
