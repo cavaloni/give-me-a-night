@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "build",
+    "postinstall": "run build",
     "prod": "run-p start build",
     "dev": "run-p watch serve",
     "test": "mocha --recursive --compilers js:babel-core/register",
