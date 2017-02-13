@@ -1,83 +1,95 @@
-@import 'react-selectize/themes/index.css';
-@import "react-google-places-suggest/lib/index.css";
-
-*{
-      font-family: 'Arsenal', sans-serif;
+* {
+  font-family: 'Pontano Sans', sans-serif;
 }
 
 .placesSuggest {
   display: inline-block;
 }
 
-body, html {
+body,
+html {
   height: 100%;
   margin: 0;
 }
 
-#app {
-  background: url(../../../assets/img/attempt3.jpg);
+body {
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  background-position: center !important;
+  background: url(../../../assets/img/attempt6.jpg);
+}
+
+
+/*#app {
+  background: url(../../../assets/img/attempt4.jpg);
   overflow: visible;
   background-size: 100%;
   min-height: 100%;
+}*/
+
+.flip-container,
+.flip-container.flip {
+  perspective: 1000px;
 }
 
-.flip-container, .flip-container.flip {
-	perspective: 1000px;
-}
-	/* flip the pane when hovered */
-	.flip-container.flip .flipper  {
-		transform: rotateY(180deg);
-	}
 
-  .flipper {
-	transition: 0.6s;
-	transform-style: preserve-3d;
+/* flip the pane when hovered */
 
-	position: relative;
+.flip-container.flip .flipper {
+  transform: rotateY(180deg);
 }
 
 .flipper {
-    width: 100%;
-    height: 100%;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.flipper {
+  width: 100%;
+  height: 100%;
 }
 
 .flip-container {
-     width: 23%;
-    height: 90%;
-    display: inline-block;
-    float: left;
-    margin: 4px;
-    animation: turn 4s;
+  width: 23%;
+  height: 90%;
+  display: inline-block;
+  float: left;
+  margin: 4px;
+  animation: turn 4s;
 }
 
 @keyframes turn {
-  from {transform: rotate(0deg);}
+  from {
+    transform: rotate(0deg);
+  }
 }
- 
+
 .flip-container.flip {
-   width: 23%;
-    height: 90%;
-    display: inline-block;
-    float: left;
-    margin: 4px;
+  width: 23%;
+  height: 90%;
+  display: inline-block;
+  float: left;
+  margin: 4px;
 }
 
 @media only screen and (max-width: 540px) {
-    .flip-container, .flip-container.flip {
-        width: 46%;
-        height: 48%;
-    }
+  .flip-container,
+  .flip-container.flip {
+    width: 46%;
+    height: 48%;
+  }
 }
 
-.flip-container, .flip-container.flip {
-      animation-name: offHover;
-    animation-duration: .4s;
-    animation-fill-mode: backwards;
+.flip-container,
+.flip-container.flip {
+  animation-name: offHover;
+  animation-duration: .4s;
+  animation-fill-mode: backwards;
 }
-
 
 @keyframes hoverPuffUp {
- from {
+  from {
     transform: scale(1.0);
     filter: sepia(0%);
   }
@@ -88,10 +100,9 @@ body, html {
 }
 
 @keyframes offHover {
- from {
+  from {
     transform: scale(1.1);
     filter: sepia(70%);
-     
   }
   to {
     transform: scale(1.0);
@@ -99,12 +110,13 @@ body, html {
   }
 }
 
-.flip-container:hover, .flip-container.flip:hover {
-    cursor: pointer;
-    animation-name: hoverPuffUp;
-    animation-duration: .8s;
-    animation-fill-mode: forwards;
-    z-index: 99;
+.flip-container:hover,
+.flip-container.flip:hover {
+  cursor: pointer;
+  animation-name: hoverPuffUp;
+  animation-duration: .8s;
+  animation-fill-mode: forwards;
+  z-index: 99;
 }
 
 .placesSuggest {
@@ -113,50 +125,52 @@ body, html {
   display: inline-block;
 }
 
-  .placesSuggest_suggests {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    box-shadow: 0 .4rem .5rem .0625rem #dbdbdc;
-    z-index: 2;
-  }
+.placesSuggest_suggests {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 .4rem .5rem .0625rem #dbdbdc;
+  z-index: 2;
+}
 
-    .placesSuggest_suggest {
-      padding: .3125rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.875rem;
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center;
-    }
+.placesSuggest_suggest {
+  padding: .3125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.875rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
 
-    .placesSuggest_suggest:hover,
-    .placesSuggest_suggest-active {
-      background: #f5f5f5;
-    }
+.placesSuggest_suggest:hover,
+.placesSuggest_suggest-active {
+  background: #f5f5f5;
+}
 
-    .placesSuggest_suggest:hover {
-      cursor: pointer;
-    }
+.placesSuggest_suggest:hover {
+  cursor: pointer;
+}
 
-      .placesSuggest_suggestLabel {
-        font-size: .8125rem;
-        color: #000;
-      }
+.placesSuggest_suggestLabel {
+  font-size: .8125rem;
+  color: #000;
+}
 
-        .placesSuggest_suggestMatch {
-          font-weight: bold;
-        }
+.placesSuggest_suggestMatch {
+  font-weight: bold;
+}
+
+
 /*
 .placesSuggest_suggests>ul {
   font-size: 12px;
@@ -167,10 +181,10 @@ body, html {
 }*/
 
 .darkener>img {
-    border-radius: 3px;
-    height: 100%;
-    width: 100%;
-    /*margin: 10px calc(50% - 50px);*/
-    /*box-shadow: 1px 3px 10px;*/
-    filter: brightness(50%);
+  border-radius: 3px;
+  height: 100%;
+  width: 100%;
+  /*margin: 10px calc(50% - 50px);*/
+  /*box-shadow: 1px 3px 10px;*/
+  filter: brightness(50%);
 }

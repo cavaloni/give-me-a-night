@@ -10,10 +10,10 @@
 
 
 .logo {
-  left: 35%;
+  left: 50%;
     position: absolute;
     font-size: 50px;
-    font-family: Veneer;
+    font-family: 'Didact Gothic', sans-serif;
     color: #d4d4d1;
     /* border-bottom: 2px solid lightgray; */
     z-index: 100;
@@ -44,5 +44,8 @@
 @media only screen and (max-width: 540px) {
   .city {
         top: 90px;
+    }
+    .logo {
+      left: 25%;
     }
 }

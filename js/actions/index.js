@@ -267,7 +267,7 @@ export const fetchResults = (loc, feel) => dispatch => {
             return response.events
         }
         })
-
+//butt
         function getGooglePhotos1(rest) {
             return new Promise((resolve, reject) => {
                 if (rest.restaurant.featured_image !== '') {

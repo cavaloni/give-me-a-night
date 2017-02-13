@@ -26,7 +26,6 @@ export class SearchArea extends Component {
     }
 
     handleSelectSuggest = (suggest, coordinate) => {
-        console.log(coordinate);
     this.setState({search: suggest.description, selectedCoordinate: coordinate})
   }
 
@@ -67,7 +66,7 @@ export class SearchArea extends Component {
             <div styleName={`styles.${className}`}>Loading...</div>
                 <form onSubmit={this.handleSubmit}>
                     <label>
-                        Where you at?
+                        Where are you?
                         
                         <GooglePlacesSuggest
                             googleMaps={googleMaps}
@@ -84,7 +83,7 @@ export class SearchArea extends Component {
                     
                     </label>
                     <label>
-                        How you feeling?
+                        How are you feeling?
                         <select ref={ref => this.feeling = ref}>
                             <option value="crazy">Crazy</option>
                             <option value="fun">Fun</option>

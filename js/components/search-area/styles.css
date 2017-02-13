@@ -91,6 +91,17 @@ font-family: "Josefin Sans";
     display: inline-block;
 }*/
 
+@media screen and (max-width: 540px){
+    form>* {
+    font-size: 12px;
+    display: block;
+    text-align: left;
+    }
+    button {
+        margin: 10px 10px 0 60px;
+    }
+}
+
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     select {
         padding-right: 18px
