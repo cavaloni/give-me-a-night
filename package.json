@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "A React template",
   "main": "server.js",
+  "engines": {
+    "node": "7.3.0"
+  },
   "scripts": {
     "start": "node server.js",
     "postinstall": "npm run prod",
