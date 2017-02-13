@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node server.js",
     "postinstall": "npm run prod",
-    "prod": "run-p start build",
+    "prod": "start",
     "dev": "run-p watch serve",
     "test": "mocha --recursive --compilers js:babel-core/register",
     "build": "run-s build:*",
