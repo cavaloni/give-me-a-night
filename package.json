@@ -4,7 +4,8 @@
   "description": "A React template",
   "main": "server.js",
   "engines": {
-    "node": "7.3.0"
+    "node": "7.3.0",
+    "npm": "4.0.5"
   },
   "scripts": {
     "start": "node server.js",
