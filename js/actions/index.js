@@ -20,7 +20,10 @@ const places = new google
     .PlacesService(element)
 
 export const FETCH_SUCCESS = 'FETCH_SUCCESS';
-export const fetchSuccess = (results) => ({type: FETCH_SUCCESS, results});
+export const fetchSuccess = (results) => {
+    console.log(results);
+    return {type: FETCH_SUCCESS, results}
+};
 
 export const FETCH_FAILURE = 'FETCH_FAILURE';
 export const fetchFailure = (err, provider) => ({type: FETCH_FAILURE, err, provider});
@@ -314,13 +317,14 @@ export const fetchResults = (loc, feel) => dispatch => {
         let errored = [];
 
         movieObs.subscribe(x => {
+            console.log('movie results', x);
             returnedItems.movieResults = x;
         }, err => {
             errored.push('movieResults')
         })
 
         bandsInTownObs.subscribe(x => {
-            console.log(x);
+            console.log('bit results', x);
             returnedItems.bitResults = x;
         }, err => {
             console.log(err);
@@ -328,6 +332,7 @@ export const fetchResults = (loc, feel) => dispatch => {
         })
 
         zomatoObs.subscribe(x => {
+            console.log('zomatoResults', x);
             if (x.length === 0) {
                 errored.push('zomatoResults')
             }
@@ -343,9 +348,10 @@ export const fetchResults = (loc, feel) => dispatch => {
             .mergeAll()
 
         eventBrite2Attempts.subscribe(x => {
-            console.log(x);
+            console.log('eventbrite results', x);
             returnedItems.ebResults = x},
             err => {
+                console.log(err);
                 errored.push('ebResults')})
 
         const zomatoResults = zomatoObs.flatMap(x => {
@@ -359,6 +365,7 @@ export const fetchResults = (loc, feel) => dispatch => {
             })
 
         returnedItems.zomatoResults = [];
+        
         googlePhotosObs.subscribe(rest => {
             returnedItems
                 .zomatoResults
@@ -375,14 +382,16 @@ export const fetchResults = (loc, feel) => dispatch => {
                 returnedItems = immutable.set(returnedItems, `${provider}.0.${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png');
                 returnedItems = immutable.set(returnedItems, `${provider}.0.${dataPaths[provider].title}`, 'Small Town?')
             });
+            console.log(returnedItems);
             dispatch(fetchSuccess(returnedItems));
             dispatch(toggleCardSides());      
             dispatch(toggleSearching());
         }).subscribe(x => {
-            console.log('non error: ' + x);
+            console.log('non error: ', x);
         }, err => {
-            console.log('error on merge: ' + err);
-        })
+            console.log('error on merge: ', err);
+        },
+        ()=> { console.log('all done!');})
 
     })
 }

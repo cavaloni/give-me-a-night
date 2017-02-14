@@ -1,8 +1,6 @@
 import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import * as reducers from './reducers/index';
-import { routerMiddleware } from 'react-router-redux'
-
 
 
 

@@ -1,5 +1,4 @@
 import * as actions from '../actions/index';
-import update from 'immutability-helper';
 import objectPath from 'object-path';
 import immutable from 'object-path-immutable';
 
@@ -74,13 +73,16 @@ export const dataPaths = {
 }
 
 export const appReducer = (state = initialState, action) => {
+    console.log(action);
     switch (action.type) {
         case 'FETCH_SUCCESS':
+        console.log(action);
         let bigObj = {eventsToDisplay: [{}, {}, {}]};
         
             let res;
             let returnObj = {eventsToDisplay: [{}, {}, {}]};
             for (res in action.results) {
+                console.log(res);
                 let provider = res;
                 let results = action.results[res];
                 let newEventToAddIndex = undefined;
@@ -90,7 +92,7 @@ export const appReducer = (state = initialState, action) => {
                 
                 let eventToAdd;
 
-            for (i = 0; i <= 2; i++) {
+            for (let i = 0; i <= 2; i++) {
                     eventToAddIndex = eventRandomizer(results);
                     indecesOfDisplayed.forEach((index) => {
                         if (eventToAddIndex === index) {

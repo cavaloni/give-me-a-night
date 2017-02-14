@@ -1,8 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const context = path.resolve(__dirname, 'js');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 require('babel-core/register')({
   presets: ['es2015', 'react']
@@ -14,29 +14,39 @@ require.extensions['.css'] = () => {
   return;
 };
 
+const VENDOR_LIBS = [
+  'react', 'react-dom', 'react-redux', 'redux', 'rxjs'
+];
+
 module.exports = {
-  context,
-  entry: path.resolve(__dirname, 'js/index.js'),
+  entry:  {
+    bundle: [
+      'babel-polyfill',
+      path.resolve(__dirname, 'js/index.js')
+    ],
+    vendor: VENDOR_LIBS
+  },
   output: {
     path: path.resolve(__dirname, 'build/js'),
-    filename: 'index.js',
+    filename: '[name].[chunkhash].js',
+    publicPath: '/'
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'index.html')
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor', 'manifest']
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    })
   ],
   resolve: {
-        extensions: ['', '.js', '.jsx', '.css'],
-        modulesDirectories: [
+        extensions: ['.js', '.jsx', '.css'],
+        modules: [
           'node_modules'
         ]        
     },
@@ -56,7 +66,7 @@ module.exports = {
         test: /\.js$/,
         include: path.resolve(__dirname, 'js'),
         loader: 'babel-loader',
-        presets: ['es2015', 'react'],
+        // presets: ['es2015', 'react'],
       query: {
          plugins: [
            
