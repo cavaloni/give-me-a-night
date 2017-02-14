@@ -19,6 +19,7 @@ const VENDOR_LIBS = [
 ];
 
 module.exports = {
+  context,
   entry:  {
     bundle: [
       'babel-polyfill',
@@ -33,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'index.html')
+      template: path.resolve(__dirname, './index.html')
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest']
