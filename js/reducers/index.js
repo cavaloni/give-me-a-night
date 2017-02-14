@@ -139,8 +139,6 @@ export const appReducer = (state = initialState, action) => {
             return updatedState
 
         case 'NO_RESULTS':
-            console.log('this happened');
-            console.log(action.provider);
             let stateCopy = JSON.parse(JSON.stringify(state));
             stateCopy.eventsToDisplay.forEach((list) => {
                 list[action.provider].image = 'http://topradio.com.ua/static/images/sad-no-results.png';
