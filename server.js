@@ -7,7 +7,7 @@ const app = express();
 app.use('/', express.static(process.env.PWD + '/build'));
 
 app.get('/', function(request, response) {
-  response.render(process.env.PWD + '/build/index.html');
+  response.render(process.env.PWD + '/build/js/index.html');
 });
 
 app.listen(process.env.PORT || 8081, () => {console.log(`Your app is listening on port 8081`);})
