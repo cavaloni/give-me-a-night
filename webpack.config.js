@@ -33,9 +33,11 @@ module.exports = {
     publicPath: '/build/'
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'build/index.html')
-    }),
+    new HtmlWebpackPlugin(
+    //   {
+    //   template: path.resolve(__dirname, 'build/index.html')
+    // }
+    ),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest']
     }),
