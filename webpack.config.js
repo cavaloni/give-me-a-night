@@ -30,11 +30,11 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build/js'),
     filename: '[name].[chunkhash].js',
-    publicPath: '/'
+    publicPath: '/build/'
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, './index.html')
+      template: path.resolve(__dirname, 'index.html')
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest']
