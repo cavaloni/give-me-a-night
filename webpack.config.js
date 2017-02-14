@@ -40,7 +40,7 @@ module.exports = {
           'node_modules'
         ]        
     },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   module: {
     loaders: [{
       test: /\.css$/,
