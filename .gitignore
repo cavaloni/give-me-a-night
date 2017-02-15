@@ -1,6 +1,5 @@
-build
 .idea
-build
+build/
 node_modules
 *.log
 *npm*.*
