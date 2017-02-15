@@ -30,14 +30,12 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build/js'),
     filename: '[name].[chunkhash].js',
-    publicPath: '/build/'
+    publicPath: '/js/'
   },
   plugins: [
     new HtmlWebpackPlugin(
       {
-    //   {
-    //   template: path.resolve(__dirname, 'build/index.html')
-    // }
+      template: path.resolve(__dirname, 'index.html')
       }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest']
@@ -65,7 +63,8 @@ module.exports = {
           'css-loader?importLoader=1&modules&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
         ],
     }, 
-    { test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/, loader: require.resolve("file-loader") + "?name=../[path][name].[ext]"},
+    { test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/, 
+      loader: require.resolve("file-loader") + "?name=../[path][name].[ext]"},
     {   
         test: /\.js$/,
         include: path.resolve(__dirname, 'js'),
