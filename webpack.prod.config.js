@@ -23,20 +23,19 @@ module.exports = {
   entry:  {
     bundle: [
       'babel-polyfill',
-      './js/index.js'
+      path.resolve(__dirname, 'js/index.js')
     ],
     vendor: VENDOR_LIBS
   },
   output: {
     path: path.resolve(__dirname, 'build/js'),
     filename: '[name].[chunkhash].js',
-    chunkFilename: '[name].[chunkhash:8].chunk.js',
     publicPath: '/js/'
   },
   plugins: [
     new HtmlWebpackPlugin(
       {
-        filename: './index.html',
+        filename: '../index.html',
       template: path.resolve(__dirname, 'index.html')
       }),
     new webpack.optimize.CommonsChunkPlugin({
