@@ -23,7 +23,7 @@ module.exports = {
   entry:  {
     bundle: [
       'babel-polyfill',
-      path.resolve(__dirname, 'js/index.js')
+      './js/index.js'
     ],
     vendor: VENDOR_LIBS
   },
