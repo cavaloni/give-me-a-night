@@ -48,12 +48,7 @@
   "author": "Joe Turner <joe@oampo.co.uk>",
   "license": "UNLICENSED",
   "devDependencies": {
-    "babel-cli": "^6.11.4",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "babel-polyfill": "^6.13.0",
-    "babel-preset-es2015": "^6.13.1",
-    "babel-preset-react": "^6.11.1",
+    
     "chai": "^3.5.0",
     "chai-enzyme": "^0.5.1",
     "chokidar-cli": "^1.2.0",
@@ -61,16 +56,20 @@
     "enzyme": "^2.4.1",
     "eslint": "^3.14.0",
     "eslint-plugin-react": "^6.9.0",
-    "html-webpack-plugin": "^2.28.0",
+    
     "http-server": "^0.9.0",
     "mocha": "^3.0.1",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
-    "uglify-js": "github:mishoo/UglifyJS2#harmony",
-    "webpack": "^2.2.1",
+    
     "webpack-bundle-analyzer": "^2.2.1"
   },
   "dependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.13.1",
     "babel-plugin-react-css-modules": "^2.2.0",
     "babel-preset-react": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
@@ -84,6 +83,7 @@
     "google-locations": "^0.2.0",
     "google-places-browser": "^1.0.0",
     "google-places-web": "0.0.4",
+    "html-webpack-plugin": "^2.28.0",
     "immutability-helper": "^2.1.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
@@ -114,6 +114,8 @@
     "rimraf": "^2.5.4",
     "rxjs": "^5.1.0",
     "style-loader": "^0.13.1",
+    "uglify-js": "github:mishoo/UglifyJS2#harmony",
+    "webpack": "^2.2.1",
     "whatwg-fetch": "^2.0.2"
   }
 }
