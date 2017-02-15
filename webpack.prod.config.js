@@ -30,7 +30,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build/js'),
     filename: '[name].[chunkhash].js',
-    publicPath: 'build/js/'
+    publicPath: '/build/js/'
   },
   plugins: [
     new HtmlWebpackPlugin(
