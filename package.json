@@ -28,7 +28,7 @@
     "clean:js": "rimraf build/js",
     "mkdir:js": "mkdirp build/js",
     "build:js": "npm run-s clean:js mkdir:js _build:js",
-    "build:js-prod": "webpack -p --progress --colors",
+    "build:js-prod": "webpack -p --progress --colors --config webpack.prod.config.js",
     "_build:js": "webpack -p",
     "watch:js": "run-s build:js _watch:js",
     "_watch:js": "webpack --watch --progress",
