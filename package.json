@@ -14,7 +14,7 @@
     "dev": "run-p watch serve build",
     "test": "mocha --recursive --compilers js:babel-core/register",
     "build": "run-s _build:*",
-    "build-prod": "npm run-s build:css build:js-prod build:css build:assets",
+    "build-prod": "run-s build:css build:js-prod build:css build:assets",
     "clean": "rimraf build",
     "serve": "http-server -c-1 build",
     "watch": "run-p watch:*",

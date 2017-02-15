@@ -50,7 +50,7 @@ export const toggleSearching = () => ({type: TOGGLE_SEARCHING})
 // () => ({type: RESET_FLIPPERS}) export const FLIPPERS_ON = 'FLIPPERS_ON';
 // export const flippersOn = () => ({type: FLIPPERS_ON})
 
-export const fetchResults = (loc, feel) => dispatch => {
+export const fetchResults = (loc, feel, coordinates) => dispatch => {
 
     let returnedItems = {
         zomatoResults: [],
