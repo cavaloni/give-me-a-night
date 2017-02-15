@@ -29,6 +29,7 @@ export class ResultsContainer extends Component {
     };
 
     componentWillReceiveProps() {
+        console.log('this changed');
         this.cascadeRender();
     }
 
@@ -67,7 +68,7 @@ export class ResultsContainer extends Component {
                     opacity1: 0
                 }}
                     atActive={{
-                    scaleZ: .01,
+                    scaleZ: spring(.01, {stiffness: 120, damping: 17.5}),
                     opacity: 1,
                     opacity1: .5
                 }}
@@ -80,6 +81,7 @@ export class ResultsContainer extends Component {
         )
     }
 }
+
 
 const mapStatetoProps = (state, props) => ({eventsToDisplay: state.eventsToDisplay, search: state.search, cardSideIsFront: state.cardSideIsFront});
 
