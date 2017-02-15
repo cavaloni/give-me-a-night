@@ -30,6 +30,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build/js'),
     filename: '[name].[chunkhash].js',
+    chunkFilename: '[name].[chunkhash:8].chunk.js',
     publicPath: '/build/js/'
   },
   plugins: [
