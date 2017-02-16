@@ -33,7 +33,7 @@
     "watch:js": "run-s build:js _watch:js",
     "_watch:js": "webpack --watch --progress",
     "clean:css": "rimraf build/css",
-    "mkdir:css": "run-s mkdir",
+    "mkdir:css": "run-s mkdir build/css",
     "build:css": "npm run-s clean:css mkdir:css _build:css",
     "_build:css": "cpr css build/css",
     "watch:css": "npm run-s build:css _watch:css",
