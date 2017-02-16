@@ -57,8 +57,8 @@ export class Card extends Component {
 
     render() {
 
-        const cardStyleFront = `styles.card styles.front`;
-        const cardStyleBack = `styles.card styles.back`;
+        const cardStyleFront = `styles.card${this.props.cardNum} styles.card styles.front`;
+        const cardStyleBack = `styles.card${this.props.cardNum} styles.card styles.back`;
 
         let className = classNames({
             flip: !this.props.flippy,
