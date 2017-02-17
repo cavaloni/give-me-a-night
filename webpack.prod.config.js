@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
+
 require('babel-core/register')({
   presets: ['es2015', 'react']
 });
@@ -58,10 +59,11 @@ module.exports = {
   devtool: 'source-map',
   module: {
     loaders: [{
-      loader: ExtractTextPlugin.extract({
+      loaders: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          loader: ['css-loader', 'postcss-loader']
+          loaders: ['css-loader', 'postcss-loader']
         }),
+    test: /\.css$/},{
       test: /\.css$/,
       include: path.resolve(__dirname, 'js'),
       exclude: /(node_modules)/,
