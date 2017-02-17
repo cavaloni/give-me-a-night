@@ -74,7 +74,7 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.26.1",
     "express": "^4.14.1",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "fetch-jsonp": "^1.0.5",
     "file-loader": "^0.10.0",
     "geocoder": "^0.2.2",
