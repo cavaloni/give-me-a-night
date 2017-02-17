@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import styles from './styles.css';
 import {browserHistory} from 'react-router';
 import {Modal} from 'react-overlays';
+import moment from 'moment';
 
 const modalStyle = {
     position: 'fixed',
@@ -38,6 +39,8 @@ export class InfoBox extends Component {
         let link;
         let image;
 
+        const time = moment(thisInfo.startTime).format('h:mm a')
+
         const evtType = this.props.clickedBox.eventType;
 
         if (evtType === 'bitResults' || evtType === 'ebResults' || evtType === 'zomatoResults') {
@@ -48,7 +51,7 @@ export class InfoBox extends Component {
             location = <div/>
         }
         if (evtType === 'ebResults' || evtType === 'bitResults') {
-            startTime = <div>Start Time: {thisInfo.startTime}
+            startTime = <div>Start Time: {time}
             </div>
             link = thisInfo.link;
             image = thisInfo.image;
@@ -96,6 +99,7 @@ export class InfoBox extends Component {
                     opacity: this.props.style.opacity
                 }}>
                     <div styleName="styles.pop-up-box">
+                        <div styleName="styles.close" onClick={browserHistory.goBack}>X</div>
                         <h2>{thisInfo.title}</h2>
                         <img styleName="styles.box-img" src={image}/>
                         <div styleName="styles.overflowBox">

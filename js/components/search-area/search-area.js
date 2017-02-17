@@ -7,6 +7,7 @@ import GoogleMapLoader from "react-google-maps-loader";
 import GooglePlacesSuggest from "react-google-places-suggest";
 import classNames from 'classnames';
 import immutable from 'object-path-immutable';
+import NativeListener from 'react-native-listener';
 
 
 
@@ -34,18 +35,25 @@ export class SearchArea extends Component {
   } 
 
     handleSubmit(e) {
+        console.log(e);
         e.preventDefault();
-        this.props.dispatch(actions.toggleSearching())
+        this.props.dispatch(actions.toggleSearching());
+        console.log(this.state);
         const loc = this.state.search;
         const feel = this.feeling.value;
+        const coordinates = this.state.selectedCoordinate;
         // this.props.dispatch(actions.resetFlippers())
         this
             .props
             .dispatch(actions.search(loc, feel));
         this
             .props
-            .dispatch(actions.fetchResults(loc, feel));
+            .dispatch(actions.fetchResults(loc, feel, coordinates));
         browserHistory.push('/results');
+    }
+
+    doNothing (e) {
+        e.preventDefault();
     }
 
     render() {
@@ -64,7 +72,7 @@ export class SearchArea extends Component {
         return (
             <div styleName="styles.search-area">
             <div styleName={`styles.${className}`}>Loading...</div>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.doNothing}>
                     <label>
                         Where are you?
                         
@@ -72,6 +80,7 @@ export class SearchArea extends Component {
                             googleMaps={googleMaps}
                             onSelectSuggest={this.handleSelectSuggest}
                             search={search}
+                            suggestComponentRestrictions={{country: 'United States'}}   
                             >
                             <input
                                 type="text"
@@ -91,7 +100,7 @@ export class SearchArea extends Component {
                             <option value="unique">Unique</option>
                         </select>
                     </label>
-                    <input styleName="styles.submit-button" type="submit" value="Submit"/>
+                    <input styleName="styles.submit-button" type="button" value="Submit" onClick={this.handleSubmit}/>
                 </form>
             </div >
         )

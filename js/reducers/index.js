@@ -59,7 +59,7 @@ export const dataPaths = {
         description: 'overview',
         link: undefined,
         startTime: undefined,
-        score: 'popularity'
+        score: 'vote_average'
     },
     bitResults: {
         image: 'image.medium.url',

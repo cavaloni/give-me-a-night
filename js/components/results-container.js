@@ -68,7 +68,7 @@ export class ResultsContainer extends Component {
                     opacity1: 0
                 }}
                     atActive={{
-                    scaleZ: spring(.01, {stiffness: 120, damping: 17.5}),
+                    scaleZ: spring(.01, {stiffness: 201, damping: 26}),
                     opacity: 1,
                     opacity1: .5
                 }}
