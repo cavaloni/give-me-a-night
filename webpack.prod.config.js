@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 const context = path.resolve(__dirname, 'js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
 require('babel-core/register')({
@@ -30,9 +31,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build/js'),
     filename: '[name].[chunkhash].js',
-    publicPath: '/'
+    publicPath: '/js/'
   },
   plugins: [
+    new ExtractTextPlugin('index.css'),
     new HtmlWebpackPlugin(
       {
         filename: '../index.html',
@@ -56,6 +58,10 @@ module.exports = {
   devtool: 'source-map',
   module: {
     loaders: [{
+      loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          loader: ['css-loader', 'postcss-loader']
+        }),
       test: /\.css$/,
       include: path.resolve(__dirname, 'js'),
       exclude: /(node_modules)/,

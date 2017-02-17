@@ -12,6 +12,7 @@ import store from './store';
 
 import {Router, Route, hashHistory, IndexRoute, browserHistory} from 'react-router';
 import {Provider} from 'react-redux';
+import '../css/index.css'
 
 
 // const history = syncHistoryWithStore(hashHistory, store)
