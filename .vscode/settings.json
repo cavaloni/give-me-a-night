@@ -2,5 +2,7 @@
     "eslint.enable": true,
     "vsicons.presets.angular": false,
     "editor.renderIndentGuides": true,
-    "editor.fontFamily": "Hack, monospace"
+    "editor.fontFamily": "Hack",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 13
 }

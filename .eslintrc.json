@@ -8,7 +8,7 @@
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
-        },
+        },kjjh
         "sourceType": "module"
     },
     "plugins": [
@@ -16,8 +16,7 @@
     ],
     "rules": {
         "indent": [
-            "error",
-            "spaces"
+            "error"
         ],
         "linebreak-style": [
             "error",
