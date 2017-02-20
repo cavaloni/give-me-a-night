@@ -85,6 +85,7 @@ module.exports = {
               quality: '90',
               speed: 4
             }
+          }
           ]
           // loader: require.resolve("file-loader") + "?name=../[path][name].[ext]"
         }, {
