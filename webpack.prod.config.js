@@ -78,32 +78,34 @@ module.exports = {
             }
           }, {
             loader: 'image-webpack-loader',
-            progressive: true,
-            optimizationLevel: 1,
-            interlaced: false,
-            pngquant: {
-              quality: '90',
-              speed: 4
+            options: {
+              progressive: true,
+              optimizationLevel: 1,
+              interlaced: false,
+              pngquant: {
+                quality: '90',
+                speed: 4
+              }
             }
           }
-          ]
-          // loader: require.resolve("file-loader") + "?name=../[path][name].[ext]"
-        }, {
-          test: /\.js$/,
-          include: path.resolve(__dirname, 'js'),
-          use: {
-            loader: 'babel-loader',
-            // presets: ['es2015', 'react'],
-            query: {
-              plugins: [
-                'transform-react-jsx',
-                ['react-css-modules', {
-                    context
-                  }]
-              ]
-            }
+        ]
+        // loader: require.resolve("file-loader") + "?name=../[path][name].[ext]"
+      }, {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'js'),
+        use: {
+          loader: 'babel-loader',
+          // presets: ['es2015', 'react'],
+          query: {
+            plugins: [
+              'transform-react-jsx',
+              ['react-css-modules', {
+                  context
+                }]
+            ]
           }
         }
-      ]
-    }
-  };
+      }
+    ]
+  }
+};
