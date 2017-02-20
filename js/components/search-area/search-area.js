@@ -35,10 +35,8 @@ export class SearchArea extends Component {
   } 
 
     handleSubmit(e) {
-        console.log(e);
         e.preventDefault();
         this.props.dispatch(actions.toggleSearching());
-        console.log(this.state);
         const loc = this.state.search;
         const feel = this.feeling.value;
         const coordinates = this.state.selectedCoordinate;

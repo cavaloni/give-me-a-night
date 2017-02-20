@@ -29,7 +29,6 @@ export class ResultsContainer extends Component {
     };
 
     componentWillReceiveProps() {
-        console.log('this changed');
         this.cascadeRender();
     }
 

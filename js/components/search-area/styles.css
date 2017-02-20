@@ -69,25 +69,7 @@ select {
     font-family: "Josefin Sans";
 }
 
-@media screen and (max-width: 540px) {
-    form>* {
-        font-size: 12px;
-        display: block;
-        text-align: left;
-    }
-    button {
-        margin: 10px 10px 0 60px;
-    }
-    form>label {
-        margin-top: 10px;
-    }
-    .submit-button {
-        margin: 10px 0 0 0;
-    }
-    .loader {
-        margin-top: 120px;
-    }
-}
+
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     select {
@@ -165,5 +147,25 @@ select {
     }
     40% {
         box-shadow: 0 2.5em 0 0;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    form>* {
+        font-size: 12px;
+        display: block;
+        text-align: left;
+    }
+    button {
+        margin: 10px 10px 0 60px;
+    }
+    form>label {
+        margin-top: 10px;
+    }
+    .submit-button {
+        margin: 10px 0 0 0;
+    }
+    .loader {
+        margin: 120px auto;
     }
 }

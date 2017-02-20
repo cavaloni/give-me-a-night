@@ -17,6 +17,10 @@
 }
 
 .close {
+    font-size: 22px;
+    border: 1px solid gray;
+    padding: 0;
+    line-height: 22px;
     position: absolute;
 }
 

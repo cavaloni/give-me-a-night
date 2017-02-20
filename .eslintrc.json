@@ -8,16 +8,16 @@
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
-        },kjjh
+        },
         "sourceType": "module"
     },
     "plugins": [
         "react"
     ],
     "rules": {
-        "indent": [
-            "error"
-        ],
+        // "indent": [
+        //     "error"
+        // ],
         "linebreak-style": [
             "error",
             "unix"

@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Rx';
 import "rxjs/add/operator/catch";
 import {dataPaths} from '../reducers/index';
 import immutable from 'object-path-immutable';
+import objectPath from 'object-path';
 
 //google JS API
 const google = window.google;
@@ -21,7 +22,6 @@ const places = new google
 
 export const FETCH_SUCCESS = 'FETCH_SUCCESS';
 export const fetchSuccess = (results) => {
-    console.log(results);
     return {type: FETCH_SUCCESS, results}
 };
 
@@ -30,12 +30,6 @@ export const fetchFailure = (err, provider) => ({type: FETCH_FAILURE, err, provi
 
 export const SEARCH_VALUES = 'SEARCH_VALUES';
 export const search = (loc, feel) => ({type: SEARCH_VALUES, loc, feel});
-
-export const RETURN_NEW_PHOTO = 'RETURN_NEW_PHOTO';
-export const returnNewPhoto = (photo, id) => ({type: RETURN_NEW_PHOTO, photo, id});
-
-export const NO_RESULTS = 'NO_RESULTS';
-export const noResults = provider => ({type: NO_RESULTS, provider});
 
 export const CURRENT_CLICKED_BOX = 'CURRENT_CLICKED_BOX';
 export const currentClickedBox = (num, eventType) => ({type: CURRENT_CLICKED_BOX, num, eventType});
@@ -46,24 +40,13 @@ export const toggleCardSides = () => ({type: TOGGLE_CARD_SIDES});
 export const TOGGLE_SEARCHING = 'TOGGLE_SEARCHING';
 export const toggleSearching = () => ({type: TOGGLE_SEARCHING});
 
-// export const RESET_FLIPPERS = 'RESET_FLIPPERS'; export const resetFlippers =
-// () => ({type: RESET_FLIPPERS}) export const FLIPPERS_ON = 'FLIPPERS_ON';
-// export const flippersOn = () => ({type: FLIPPERS_ON})
-
 export const fetchResults = (loc, feel, coordinates) => {
     return dispatch => {
-
-        let returnedItems = {
-            zomatoResults: [],
-            ebResults: [],
-            bitResults: [],
-            movieResults: []
-        };
-
+        
         //--------URL processing from location and feeling
 
-        let query;
-        let order;
+        let query = '';
+        let order = '';
         const city = loc.split(/[ ,]+/);
         const cityQuery = city.map(item => {
             if (item == undefined) {
@@ -73,10 +56,14 @@ export const fetchResults = (loc, feel, coordinates) => {
             }
         });
 
-        const cGeo = {
+        let cGeo;
+
+        if (!coordinates) {
+            cGeo = '';
+        } else { cGeo = {
             long: coordinates.longitude,
             lat: coordinates.latitude
-        };
+        };}
 
         const zomatoUrl = ((loc, feel) => {
 
@@ -117,14 +104,6 @@ export const fetchResults = (loc, feel, coordinates) => {
 
         const bandsInTownArgs = ((loc, feel) => {
             let query;
-            const city = loc.split(/[ ,]+/);
-            const cityQuery = city.map(item => {
-                if (item == undefined) {
-                    return ''
-                } else {
-                    return item
-                }
-            });
 
             if (feel == 'crazy') {
                 query = 'dance';
@@ -149,22 +128,11 @@ export const fetchResults = (loc, feel, coordinates) => {
             };
         })(loc, feel);
 
-        console.log(bandsInTownArgs);
-
         const eventBriteUrl = (loc, feel) => {
 
             let query;
             let catQuery;
             let counter = 0;
-
-            const city = loc.split(/[ ,]+/);
-            const cityQuery = city.map(item => {
-                if (item == undefined) {
-                    return ''
-                } else {
-                    return item
-                }
-            });
 
             if (feel == 'crazy') {
                 query = '105%2C108%2C110';
@@ -181,19 +149,15 @@ export const fetchResults = (loc, feel, coordinates) => {
                 catQuery = '';
             }
 
-            let locationQuery;
-
-            if (!cityQuery[2]) {
-                locationQuery = `${cityQuery[0]}%2C+${cityQuery[1]}`
-            } else {
-                locationQuery = `${cityQuery[0]}+${cityQuery[1]}%2C+${cityQuery[2]}`
-            }
+            const locationQuery = encodeURIComponent(cityQuery)
 
             return `https://www.eventbriteapi.com/v3/events/search/?location.address=${locationQuery}&location.within=30mi&${catQuery}start_date.keyword=today&token=6SVNTPUPXW5HGNKP5ZGW`
         };
 
         const eventBriteUrlAtmpt2 = eventBriteUrl(loc, null); //EventBrite needs 2 attempts
-        //because often first search returns no results ------- -------Fetches -------
+        //because often first search returns no results ------- 
+        
+        //-------Fetches -------
 
         const fetchZomato = fetch(zomatoUrl, {
             headers: {
@@ -204,26 +168,21 @@ export const fetchResults = (loc, feel, coordinates) => {
         }).then((data) => {
             return data.json();
         }).then(response => {
-            console.log('zomatoes results', response);
-            return response.restaurants
-        }).catch(err => {
-            console.log(err);
-        });
+            if (response.restaurants.length === 0) {
+                throw new Error('no zomato results')
+            } else {return response.restaurants}            
+            })
 
         const fetchMovies = fetch(moviesUrl).then((data) => {
             return data.json();
         }).then(response => {
-            console.log(response);
             return response.results
-        }).catch(err => {
-            console.log(err);
-        });
+        })
 
         const fetchBandsInTown = new Promise((resolve, reject) => {
             EVDB
                 .API
                 .call("/events/search", bandsInTownArgs, function (oData) {
-                    console.log(oData);
                     if (!oData.events) {
                         reject('BIT is fucked');
                         return
@@ -235,8 +194,10 @@ export const fetchResults = (loc, feel, coordinates) => {
         const fetchEventBrite = fetch(eventBriteUrl(loc, feel), {}).then((data) => {
             return data.json();
         }).then(response => {
-            console.log(response.events);
-            if (response.events.length === 0) {
+            if (response.error) {
+                throw new Error('no ebResults 2')
+            }
+            if (response.events.length === 0 || response.error) {
                 throw new Error('no ebResults 1')
             } else {
                 return response.events
@@ -246,7 +207,9 @@ export const fetchResults = (loc, feel, coordinates) => {
         const fetchEventBriteAtmpt2 = fetch(eventBriteUrlAtmpt2, {}).then((data) => {
             return data.json();
         }).then(response => {
-            console.log(response.events);
+            if (response.error) {
+                throw new Error('no ebResults 2')
+            }
             if (response.events.length === 0) {
                 throw new Error('no ebResults 2')
             } else {
@@ -264,8 +227,6 @@ export const fetchResults = (loc, feel, coordinates) => {
                     input: rest.restaurant.location.address + ' ' + rest.restaurant.name
                 }, (results, status) => {
                     if (status !== 'OK' || results === null) {
-                        console.log(results);
-                        console.log(status);
                         const photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg";
                         rest.restaurant.featured_image = photo;
                         resolve(rest);
@@ -297,84 +258,72 @@ export const fetchResults = (loc, feel, coordinates) => {
         const eventbriteObs = Observable.fromPromise(fetchEventBrite);
         const eventbriteObs2 = Observable.fromPromise(fetchEventBriteAtmpt2);
 
-        let errored = [];
-
-        movieObs.subscribe(x => {
-            console.log('movie results', x);
-            returnedItems.movieResults = x;
-        }, err => {
-            errored.push('movieResults')
-        });
-
-        bandsInTownObs.subscribe(x => {
-            console.log('bit results', x);
-            returnedItems.bitResults = x;
-        }, err => {
-            console.log(err);
-            errored.push('bitResults')
-        });
-
-        zomatoObs.subscribe(x => {
-            console.log('zomatoResults', x);
-            if (x.length === 0) {
-                errored.push('zomatoResults')
-            }
-            returnedItems.zomatoResults = x;
-        }, err => {
-            errored.push('zomatoResults')
-        });
+        function erroredObj (provider) {
+            let errObj = {};
+            objectPath.set(errObj, `${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png')
+            objectPath.set(errObj, `${dataPaths[provider].title}`, 'Small Town?')
+            return [errObj];
+        }
 
         const eventBrite2Attempts = Observable
             .of(eventbriteObs, eventbriteObs2)
             .reduce((ob1, ob2) => ob1.catch(() => ob2), Observable.throw(''))
             .mergeAll();
-
-        eventBrite2Attempts.subscribe(x => {
-            console.log('eventbrite results', x);
-            returnedItems.ebResults = x
-        }, err => {
-            console.log(err);
-            errored.push('ebResults')
-        });
+        
 
         const zomatoResults = zomatoObs.flatMap(x => {
             return Observable.from(x)
         });
 
-        const googlePhotosObs = zomatoResults
+        const fiveZomsResults = zomatoResults
             .take(5)
+
+        const googlePhotosObs = fiveZomsResults 
+            .filter(result => {
+                return result.restaurant.featured_image === ''
+            })
             .flatMap(rest => {
                 return Observable.fromPromise(getGooglePhotos1(rest))
             });
+        
+        const zomsWithPics = fiveZomsResults
+            .filter(result => {
+                return result.restaurant.featured_image !== ''
+            })
 
-        returnedItems.zomatoResults = [];
+        const updatedZomsResults = Observable.merge(
+            zomsWithPics,
+            googlePhotosObs
+            )
+            .toArray()
 
-        googlePhotosObs.subscribe(rest => {
-            returnedItems
-                .zomatoResults
-                .push(rest)
-        }, err => {
-            console.log(err);
-        });
+        const zomatoRes = updatedZomsResults
+            .map(results => {return {zomatoResults: results}})
+            .catch(x => Observable.of({zomatoResults: erroredObj('zomatoResults')}))
+    
+        const movieRes = movieObs
+            .map(results => {return {movieResults: results}})
+            .catch(x => Observable.of({movieResults: erroredObj('movieResults')}))
 
-        const allFetchDataObservable = Observable.onErrorResumeNext(movieObs, bandsInTownObs, eventbriteObs, zomatoObs, googlePhotosObs);
+        const bitRes = bandsInTownObs
+            .map(results => {return {bitResults: results}})
+            .catch(x => Observable.of({bitResults: erroredObj('bitResults')}));
 
-        allFetchDataObservable. finally(() => {
-            errored.forEach((provider) => {
-                returnedItems = immutable.set(returnedItems, `${provider}.0.${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png');
-                returnedItems = immutable.set(returnedItems, `${provider}.0.${dataPaths[provider].title}`, 'Small Town?')
-            });
-            console.log(returnedItems);
-            dispatch(fetchSuccess(returnedItems));
-            dispatch(toggleCardSides());
-            dispatch(toggleSearching());
-        }).subscribe(x => {
-            console.log('non error: ', x);
-        }, err => {
-            console.log('error on merge: ', err);
-        }, () => {
-            console.log('all done!');
-        })
+        const evRes = eventBrite2Attempts
+            .map(results => {return {ebResults: results}})
+            .catch(x => Observable.of({ebResults: erroredObj('ebResults')}))
+
+        const allResultsMerge = Observable.merge(zomatoRes, bitRes, movieRes, evRes)
+            .finally()
+            .scan((acc, curr) =>
+                Object.assign({}, acc, curr), {})
+
+        allResultsMerge
+            .takeLast(1)
+            .subscribe(returnedItems => {
+                dispatch(fetchSuccess(returnedItems));
+                dispatch(toggleCardSides());
+                dispatch(toggleSearching());
+            })
     };
 };
-//butt

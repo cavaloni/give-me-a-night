@@ -72,17 +72,14 @@ export const dataPaths = {
     }
 }
 
-export const appReducer = (state = initialState, action) => {
-    console.log(action);
+export const appReducer = (state = initialState, action) => {    
     switch (action.type) {
         case 'FETCH_SUCCESS':
-        console.log(action);
         let bigObj = {eventsToDisplay: [{}, {}, {}]};
         
             let res;
             let returnObj = {eventsToDisplay: [{}, {}, {}]};
             for (res in action.results) {
-                console.log(res);
                 let provider = res;
                 let results = action.results[res];
                 let newEventToAddIndex = undefined;
@@ -121,9 +118,6 @@ export const appReducer = (state = initialState, action) => {
         let fetchObj = immutable.set(state, 'eventsToDisplay', bigObj.eventsToDisplay)
          return fetchObj
 
-        case 'FETCH_FAILURE':
-            console.log(action.err);
-
         case 'SEARCH_VALUES':
             return Object.assign({}, state, {
                 search: {
@@ -131,15 +125,7 @@ export const appReducer = (state = initialState, action) => {
                     feel: action.feel
                 }
             })
-
-        case 'RETURN_NEW_PHOTO':
-            if (action.photo === 'default') {
-                action.photo = "http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg"
-            }
-            let card = action.id;
-            const updatedState = immutable.set(state, `eventsToDisplay.${card}.zomatoResults.image`, action.photo);            
-            return updatedState
-
+            
         case 'NO_RESULTS':
             let stateCopy = JSON.parse(JSON.stringify(state));
             stateCopy.eventsToDisplay.forEach((list) => {
