@@ -78,7 +78,7 @@ module.exports = {
             }
           }, {
             loader: 'image-webpack-loader',
-            options: {
+            query: {
               progressive: true,
               optimizationLevel: 1,
               interlaced: false,
