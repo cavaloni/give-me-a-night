@@ -125,7 +125,7 @@ export const appReducer = (state = initialState, action) => {
                     feel: action.feel
                 }
             })
-            
+
         case 'NO_RESULTS':
             let stateCopy = JSON.parse(JSON.stringify(state));
             stateCopy.eventsToDisplay.forEach((list) => {
@@ -155,3 +155,5 @@ export const appReducer = (state = initialState, action) => {
 
     }
 }
+
+//butt

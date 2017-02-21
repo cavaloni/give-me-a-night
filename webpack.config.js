@@ -34,6 +34,7 @@ module.exports = {
     publicPath: '/'
   },
   plugins: [
+    
     new ExtractTextPlugin('index.css'),
     new HtmlWebpackPlugin({
       filename: './index.html',

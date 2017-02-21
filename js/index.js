@@ -10,12 +10,12 @@ import ResultContainer from './components/results-container';
 
 import store from './store';
 
-import {Router, Route, hashHistory, IndexRoute, browserHistory} from 'react-router';
+import {Router, Route, browserHistory, IndexRoute} from 'react-router';
 import {Provider} from 'react-redux';
 import '../css/index.css'
 
 
-// const history = syncHistoryWithStore(hashHistory, store)
+// const history = syncHistoryWithStore(browserHistory, store)
 
 document.addEventListener('DOMContentLoaded', () => ReactDOM.render(
 <Provider store={store}>

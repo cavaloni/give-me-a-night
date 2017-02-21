@@ -79,13 +79,20 @@ module.exports = {
           }, {
             loader: 'image-webpack-loader',
             query: {
-              progressive: true,
-              optimizationLevel: 1,
               interlaced: false,
               pngquant: {
+                progressive: true,
+                optimizationLevel: 1,
+                quality: '90',
+                speed: 4
+              },
+              mozjpeg: {
+                progressive: true,
+                optimizationLevel: 1,
                 quality: '90',
                 speed: 4
               }
+
             }
           }
         ]

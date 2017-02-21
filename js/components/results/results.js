@@ -33,12 +33,12 @@ export class ResultBox extends Component {
     cascadeRender() {
         let cards = [0,1,2,3];
         if (this.props.cardSideState) {cards = cards.reverse()}
-        var interval = Observable
+        Observable
             .interval(150)
-            .take(4);
-        interval.subscribe(x => {
-            let card = cards[x];
-            this.setState(immutable.set(this.state, `renderList.card${card}`, this.props.cardSideState))
+            .take(4)
+            .subscribe(x => {
+                let card = cards[x];
+                this.setState(immutable.set(this.state, `renderList.card${card}`, this.props.cardSideState))
         })
     };
 
