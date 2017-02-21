@@ -7,9 +7,6 @@ import GoogleMapLoader from "react-google-maps-loader";
 import GooglePlacesSuggest from "react-google-places-suggest";
 import classNames from 'classnames';
 import immutable from 'object-path-immutable';
-import NativeListener from 'react-native-listener';
-
-
 
 const MY_API_KEY = 'AIzaSyBMpe5BQ6Sxg_8rqlOYMz4FzkJuAC7soio'
 
@@ -20,6 +17,8 @@ export class SearchArea extends Component {
             .handleSubmit
             .bind(this);
         this.state = {
+            error: false,
+            selected: false,
             search: "",
             selectedCoordinate: null,
             suggestRender: ''
@@ -27,20 +26,28 @@ export class SearchArea extends Component {
     }
 
     handleSelectSuggest = (suggest, coordinate) => {
-    this.setState({search: suggest.description, selectedCoordinate: coordinate})
-  }
+        this.setState({search: suggest.description, selectedCoordinate: coordinate})
+        this.setState({selected: true})
+    }
 
     handleSearchChange = (e) => {
-    this.setState({search: e.target.value})
-  } 
+        this.setState({error: false})
+        this.setState({selected: false})
+        this.setState({search: e.target.value})
+    }
 
     handleSubmit(e) {
         e.preventDefault();
-        this.props.dispatch(actions.toggleSearching());
+        if (!this.state.selected) {
+            this.setState({error: true})
+            return
+        }
+        this
+            .props
+            .dispatch(actions.toggleSearching());
         const loc = this.state.search;
         const feel = this.feeling.value;
         const coordinates = this.state.selectedCoordinate;
-        // this.props.dispatch(actions.resetFlippers())
         this
             .props
             .dispatch(actions.search(loc, feel));
@@ -50,7 +57,7 @@ export class SearchArea extends Component {
         browserHistory.push('/results');
     }
 
-    doNothing (e) {
+    doNothing(e) {
         e.preventDefault();
     }
 
@@ -60,34 +67,37 @@ export class SearchArea extends Component {
             hide: !this.props.searching,
             [`loader`]: true
         })
-        
+
+        let errorClassName = classNames({
+            hide: !this.state.error,
+            [`error`]: true
+        })
+
         const {search} = this.state
         const {googleMaps} = this.props
-    // <div styleName="styles.suggest-container">
-    //                     <div styleName="styles.suggest-render">
-    // styleName="styles.suggest"
 
         return (
             <div styleName="styles.search-area">
-            <div styleName={`styles.${className}`}>Loading...</div>
+                <div styleName={`styles.${className}`}>Loading...</div>
                 <form onSubmit={this.doNothing}>
                     <label>
                         Where are you?
-                        
+
                         <GooglePlacesSuggest
                             googleMaps={googleMaps}
                             onSelectSuggest={this.handleSelectSuggest}
                             search={search}
-                            suggestComponentRestrictions={{country: 'United States'}}   
-                            >
+                            suggestComponentRestrictions={{
+                            country: 'United States'
+                        }}>
                             <input
                                 type="text"
                                 value={search}
                                 placeholder="Search a location"
                                 onChange={this.handleSearchChange}/>
-                                
+
                         </GooglePlacesSuggest>
-                    
+
                     </label>
                     <label>
                         How are you feeling?
@@ -98,8 +108,13 @@ export class SearchArea extends Component {
                             <option value="unique">Unique</option>
                         </select>
                     </label>
-                    <input styleName="styles.submit-button" type="button" value="Submit" onClick={this.handleSubmit}/>
+                    <input
+                        styleName="styles.submit-button"
+                        type="button"
+                        value="Submit"
+                        onClick={this.handleSubmit}/>
                 </form>
+                <div styleName={`styles.${errorClassName}`}>Enter a valid city</div>
             </div >
         )
     }
@@ -107,8 +122,8 @@ export class SearchArea extends Component {
 }
 
 export const goog = GoogleMapLoader(SearchArea, {
-  libraries: ["places"],
-  key: MY_API_KEY,
+    libraries: ["places"],
+    key: MY_API_KEY
 })
 
 const mapStateToProps = (state, props) => ({searching: state.searching})

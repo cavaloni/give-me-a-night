@@ -19,12 +19,14 @@
 .close {
     font-size: 22px;
     border: 1px solid gray;
+    border-radius: 3px;
     padding: 0;
     line-height: 22px;
     position: absolute;
 }
 
 .close:hover {
+    background-color: lightgray;
     cursor: pointer;
 }
 

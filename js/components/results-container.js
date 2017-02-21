@@ -72,8 +72,6 @@ export class ResultsContainer extends Component {
                     opacity1: .5
                 }}
                 >
-                   
-
                     {this.props.children}
                 </RouteTransition>
             </div>

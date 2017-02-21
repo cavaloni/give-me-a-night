@@ -38,8 +38,11 @@ export class InfoBox extends Component {
         let score;
         let link;
         let image;
+        let time;
 
-        const time = moment(thisInfo.startTime).format('h:mm a')
+        if (thisInfo.startTime === undefined) {
+            time = ''
+        } else {time = moment(thisInfo.startTime).format('h:mm a')}
 
         const evtType = this.props.clickedBox.eventType;
 
@@ -90,8 +93,9 @@ export class InfoBox extends Component {
                 backgroundColor: '#000',
                 opacity: this.props.style.opacity1
             }}
+                onHide={()=> console.log('again nothing')}
+                onBackdropClick={() => {console.log('nothing');}}
                 show={true}
-                onHide={browserHistory.goBack}
                 autoFocus={false}>
                 <div
                     style={{

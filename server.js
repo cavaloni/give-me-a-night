@@ -4,9 +4,9 @@ const express = require('express');
 
 const app = express();
 
-app.use('/', express.static(process.env.PWD + '/build'));
+app.use('*', express.static(process.env.PWD + '/build'));
 
-app.get('/', function(request, response) {
+app.get('*', function(request, response) {
   response.render(process.env.PWD + '/build/index.html');
 });
 
