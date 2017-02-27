@@ -8,3 +8,4 @@ deploy.sh
 .eslintrc.json
 typings
 super_secret.txt
+.vscode

@@ -10,20 +10,17 @@ import ResultContainer from './components/results-container';
 
 import store from './store';
 
-import {Router, Route, browserHistory, IndexRoute} from 'react-router';
-import {Provider} from 'react-redux';
-import '../css/index.css'
-
-
-// const history = syncHistoryWithStore(browserHistory, store)
+import { Router, Route, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
+import '../css/index.css';
 
 document.addEventListener('DOMContentLoaded', () => ReactDOM.render(
-<Provider store={store}>
+  <Provider store={store}>
     <Router history={browserHistory}>
-        <Route path="/" component={App}>
-            <Route path="/results" component={ResultContainer}>
-                <Route path="/results/details" component={InfoBox}/>
-            </Route>
+      <Route path="/" component={App}>
+        <Route path="/results" component={ResultContainer}>
+          <Route path="/results/details" component={InfoBox} />
         </Route>
+      </Route>
     </Router>
-</Provider>, document.getElementById('app')));
+  </Provider>, document.getElementById('app')));

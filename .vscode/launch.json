@@ -10,14 +10,14 @@
             "type": "chrome",
             "request": "attach",
             "port": 9222,
-            "url": "localhost:8080"
+            "url": "localhost:8082"
         },
         {
             "name": "Attach to url with files served from ./build",
             "type": "chrome",
             "request": "attach",
             "port": 9222,
-            "url": "localhost:8080",
+            "url": "localhost:8082",
             "webRoot": "${workspaceRoot}/build"
         }
     ]

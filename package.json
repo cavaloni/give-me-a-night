@@ -12,7 +12,9 @@
     "prod": "run-p start build-prod",
     "heroku-postbuild": "npm run build-prod",
     "dev": "run-p watch serve build",
-    "test": "mocha --recursive --compilers js:babel-core/register",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "build": "run-s _build:*",
     "build-prod": "run-s build:css build:js-prod build:css build:assets",
     "clean": "rimraf build",
@@ -43,20 +45,51 @@
     "build:assets": "npm run-s clean:assets mkdir:assets _build:assets",
     "_build:assets": "npm run cpr assets build/assets",
     "watch:assets": "npm run-s build:assets _watch:assets",
-    "_watch:assets": "chokidar assets/**/* -c \"npm run build:assets\""
+    "_watch:assets": "chokidar assets/**/* -c \"npm run build:assets\"",
+    "lint": "eslint --fix js/"
+  },
+  "jest": {
+    "setupFiles": [
+      "./test/jestsetup.js"
+    ],
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/enzyme-to-json/serializer"
+    ],
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "^.+\\.(css|scss)$": "identity-obj-proxy"
+    },
+    "testPathDirs": [
+      "C:\\users\\chada\\projects\\give-me-a-night"
+    ]
   },
   "author": "Joe Turner <joe@oampo.co.uk>",
   "license": "UNLICENSED",
   "devDependencies": {
+    "babel-jest": "^19.0.0",
+    "babel-plugin-webpack-loaders": "^0.8.0",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.5.1",
     "chokidar-cli": "^1.2.0",
     "cpr": "^2.0.0",
-    "enzyme": "^2.4.1",
+    "enzyme": "^2.7.1",
+    "enzyme-to-json": "^1.4.6",
     "eslint": "^3.14.0",
+    "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-react": "^6.9.0",
+    "expect": "^1.20.2",
     "http-server": "^0.9.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^19.0.0",
+    "jsdom": "9.11.0",
+    "jsdom-global": "2.1.1",
     "mocha": "^3.0.1",
+    "nock": "^9.0.6",
+    "react-addons-test-utils": "^15.4.2",
+    "redux-mock-store": "^1.2.2",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
     "webpack-bundle-analyzer": "^2.2.1",
