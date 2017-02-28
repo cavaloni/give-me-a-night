@@ -14,13 +14,6 @@ const modalStyle = {
   right: 0,
 };
 
-const backdropStyle = {
-  ...modalStyle,
-  zIndex: 'auto',
-  backgroundColor: '#000',
-  opacity: 0.5,
-};
-
 export class InfoBox extends Component {
   constructor(props) {
     super(props);
@@ -94,7 +87,7 @@ export class InfoBox extends Component {
         }}
         onHide={() => console.log('again nothing')}
         onBackdropClick={() => { console.log('nothing'); }}
-        show
+        show={true}
         autoFocus={false}
       >
         <div

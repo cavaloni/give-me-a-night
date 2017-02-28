@@ -16,11 +16,10 @@ export class SearchArea extends Component {
     this.handleSelectSuggest = this.handleSelectSuggest.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.state = {
-      error: false,
-      selected: false,
-      search: '',
-      selectedCoordinate: null,
-      suggestRender: ''
+      error: false, //handles city search error message
+      selected: false, //selected city
+      search: '', //for autocomplete
+      selectedCoordinate: null, //for autocomplete
     };
   }
 
@@ -41,27 +40,21 @@ export class SearchArea extends Component {
       this.setState({error: true});
       return;
     }
-    this
-      .props
-      .dispatch(actions.toggleSearching());
+    this.props.dispatch(actions.toggleSearching());
     const loc = this.state.search;
     const feel = this.feeling.value;
     const coordinates = this.state.selectedCoordinate;
-    this
-      .props
-      .dispatch(actions.search(loc, feel));
-    this
-      .props
-      .dispatch(actions.fetchResults(loc, feel, coordinates));
+    this.props.dispatch(actions.search(loc, feel));
+    this.props.dispatch(actions.fetchResults(loc, feel, coordinates));
     browserHistory.push('/results');
   }
 
-  doNothing(e) {
+  doNothing(e) { //only want form submit on button press, not on enter-key press, to be able to validate city
     e.preventDefault();
   }
 
   render() {
-    const className = classNames({
+    const className = classNames({ //determines to display loading spinner
       hide: !this.props.searching,
       loader: true
     });
@@ -77,7 +70,7 @@ export class SearchArea extends Component {
     return (
       <div styleName="styles.search-area">
         <div styleName={`styles.${className}`}>Loading...</div>
-        <form onSubmit={this.doNothing}>
+        <form onSubmit={this.doNothing}> 
           <label>
             Where are you?
 

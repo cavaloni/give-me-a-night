@@ -19,7 +19,7 @@ export class ResultsContainer extends Component {
     };
   }
 
-  cascadeRender() {
+  cascadeRender() { //function to render the flip cards as a 'cascade' effect
     const interval = Observable
             .interval(50)
             .take(3);

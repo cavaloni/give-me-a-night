@@ -17,7 +17,6 @@
 
 .front {
     z-index: 2;
-    /* for firefox 31 */
     transform: rotate(360deg);
     transition: transform 4s
 }
@@ -113,7 +112,6 @@
 /*styles for the card*/
 
 .darkener {
-    /*background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) );*/
     height: 100%;
     width: 100%;
 }
@@ -122,8 +120,6 @@
     border-radius: 3px;
     height: 100%;
     width: 100%;
-    /*margin: 10px calc(50% - 50px);*/
-    /*box-shadow: 1px 3px 10px;*/
     filter: brightness(50%);
 }
 

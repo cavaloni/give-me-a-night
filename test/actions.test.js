@@ -51,8 +51,12 @@ describe('async actions', () => {
         objectPath.set(testerObj, `${provider}.0.${dataPaths[provider].title}`, 'Small Town?');
     });
 
-    const expectedActions = [
-      { type: 'FETCH_SUCCESS', results: testerObj }
+    const expectedActions = [{ 
+        type: 'FETCH_SUCCESS', 
+        results: testerObj 
+    },
+    { type: 'TOGGLE_CARD_SIDES' }, 
+    { type: 'TOGGLE_SEARCHING' }
     ];
 
     const store = mockStore({
@@ -64,7 +68,7 @@ describe('async actions', () => {
     });
 
     return store.dispatch(actions.fetchResults('portland, or', 'crazy'))
-      .then(() => { // return of async actions
+      .then(() => { 
         expect(store.getActions()).toEqual(expectedActions);
       });
   });

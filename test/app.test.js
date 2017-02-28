@@ -1,3 +1,5 @@
+// jest.autoMockOff()
+
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 import chai from 'chai';
@@ -8,12 +10,10 @@ import  {App} from '../js/components/app/app';
 
 describe('App component', function () {  
     it('should display the app', function () { 
-        const testtext = 'Hello World';
         
         const renderer = TestUtils.createRenderer();
         renderer.render(<App />);
         const result = renderer.getRenderOutput();
-
-        result.props.children.should.equal(testtext);
+        expect(result.props.children).toHaveLength(6);
     });
 });

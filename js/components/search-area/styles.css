@@ -48,26 +48,6 @@ form {
     z-index: 3;
 }
 
-::-webkit-input-placeholder {
-    /* Chrome/Opera/Safari */
-    color: white;
-}
-
-::-moz-placeholder {
-    /* Firefox 19+ */
-    color: white;
-}
-
-:-ms-input-placeholder {
-    /* IE 10+ */
-    color: white;
-}
-
-:-moz-placeholder {
-    /* Firefox 18- */
-    color: white;
-}
-
 select {
     margin-right: 10px;
     border: 1px solid;
@@ -84,12 +64,13 @@ select {
 }
 
 
-
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     select {
         padding-right: 18px
     }
 }
+
+/*loader spinner animation*/
 
 .loader {
     left: calc(50% - 1.75em);
@@ -163,6 +144,8 @@ select {
         box-shadow: 0 2.5em 0 0;
     }
 }
+
+/*media queries*/
 
 @media screen and (max-width: 540px) {
     form>* {

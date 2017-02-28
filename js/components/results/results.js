@@ -28,7 +28,7 @@ export class ResultBox extends Component {
   }
 
 
-  cascadeRender() {
+  cascadeRender() { //cascade effect for card flipping
     let cards = [0, 1, 2, 3];
     if (this.props.cardSideState) { cards = cards.reverse(); }
     Observable
@@ -47,14 +47,14 @@ export class ResultBox extends Component {
       return <div />;
     }
 
-    if (zomatoResults.image === '') {
+    if (zomatoResults.image === '') { //ocassionally zomatoResults returns a blank image
       zomatoResults.image === 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
     }
 
-    const noResultsImage = 'http://topradio.com.ua/static/images/sad-no-results.png';
+    const noResultsImage = 'http://topradio.com.ua/static/images/sad-no-results.png'; 
 
     const movie = {
-      image: `https://image.tmdb.org/t/p/w500${movieResults.image}` || noResultsImage,
+      image: `https://image.tmdb.org/t/p/w500${movieResults.image}` || noResultsImage, //movie results requires prepended address to retrieve
       title: movieResults.title,
     };
 

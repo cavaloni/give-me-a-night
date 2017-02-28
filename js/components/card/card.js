@@ -23,7 +23,7 @@ export class Card extends Component {
   }
 
   componentWillMount() {
-    if (this.props.evtName.length > 35) { //function to shorten lenght of description in card
+    if (this.props.evtName.length > 35) { //function to shorten length of description in card
       this.evtName = this
         .props
         .evtName
@@ -35,7 +35,7 @@ export class Card extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.evtName.length > 35) { //function to shorten lenght of description in card
+    if (nextProps.evtName.length > 35) { //function to shorten length of description in card
       this.evtName = nextProps
         .evtName
         .slice(0, 35);

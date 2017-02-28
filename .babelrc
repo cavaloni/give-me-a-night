@@ -5,13 +5,8 @@
      "env": {
     "test": {
       "plugins": [
-        [
-          "babel-plugin-webpack-loaders",
-          {
-            "config": "./webpack.test.js",
-            "verbose": false
-          }
-        ]
+        "babel-plugin-react-css-modules",
+        "transform-es2015-modules-commonjs"
       ]
     }
   }

@@ -1,12 +1,10 @@
-jest.autoMockOff()
+// jest.autoMockOff()
 
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 import chai from 'chai';
 
 const should = chai.should();
-
-
 
 import { ResultBox } from '../js/components/results/results';
 
@@ -28,6 +26,6 @@ describe('Search Area Component', function () {
         const renderer = TestUtils.createRenderer();
         renderer.render( <ResultBox results={testObj}> </ResultBox> );
         const result = renderer.getRenderOutput();
-        console.log(result);
+        expect(result.props.children).toHaveLength(5);
     })
 })

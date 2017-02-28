@@ -200,7 +200,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       return response.events;
     }
   });
-        // butt
+
   function getGooglePhotos1(rest) {
     return new Promise((resolve, reject) => {
       if (rest.restaurant.featured_image !== '') {
@@ -325,5 +325,9 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
   //   });
 
     const butt = allResultsMerge.toPromise();
-    return butt.then(x => {dispatch(fetchSuccess(x))})
+    return butt.then(x => {
+      dispatch(fetchSuccess(x));
+      dispatch(toggleCardSides());
+      dispatch(toggleSearching());
+    });
   };
