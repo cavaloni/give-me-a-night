@@ -126,7 +126,6 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
   const eventBriteUrl = (loc, feel) => {
     let query;
     let catQuery;
-    const counter = 0;
 
     if (feel == 'crazy') {
       query = '105%2C108%2C110';
@@ -202,7 +201,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
   });
 
   function getGooglePhotos1(rest) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (rest.restaurant.featured_image !== '') {
         resolve(rest);
       }
@@ -219,7 +218,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
         placeID = results[0].place_id;
         places.getDetails({
           placeId: placeID,
-        }, (results, status) => {
+        }, (results) => {
           if (!results.photos) {
             const photo = 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
             rest.restaurant.featured_image = photo;
@@ -324,8 +323,8 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
   //     dispatch(toggleSearching);
   //   });
 
-    const butt = allResultsMerge.toPromise();
-    return butt.then(x => {
+    const finalResults = allResultsMerge.toPromise();
+    return finalResults.then(x => {
       dispatch(fetchSuccess(x));
       dispatch(toggleCardSides());
       dispatch(toggleSearching());

@@ -117,6 +117,15 @@ export class InfoBox extends Component {
   }
 }
 
-const mapStatetoProps = (state, props) => ({ eventsToDisplay: state.eventsToDisplay, clickedBox: state.clickedBox });
+InfoBox.propTypes = {
+  style: React.PropTypes.object.isRequired,
+  eventsToDisplay: React.PropTypes.array.isRequired,
+  clickedBox: React.PropTypes.object.isRequired
+}
 
-export default connect(mapStatetoProps)(InfoBox);
+const mapStateToProps = (state, props) => ({ 
+  eventsToDisplay: state.eventsToDisplay, 
+  clickedBox: state.clickedBox 
+});
+
+export default connect(mapStateToProps)(InfoBox);

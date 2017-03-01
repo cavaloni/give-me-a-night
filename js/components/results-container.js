@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import ResultBox from './results/results';
-import InfoBox from './info_box/info_box';
 import { connect } from 'react-redux';
 import { Observable } from 'rxjs/Rx';
 import immutable from 'object-path-immutable';
 import { RouteTransition } from 'react-router-transition';
 import { spring } from 'react-motion';
+import ResultBox from './results/results';
 
 export class ResultsContainer extends Component {
   constructor(props) {
@@ -82,8 +81,11 @@ export class ResultsContainer extends Component {
 }
 
 
+ResultsContainer.propTypes = {
+  eventsToDisplay: React.PropTypes.array.isRequired,
+  cardSideIsFront: React.PropTypes.bool.isRequired
+}
+
 const mapStatetoProps = (state, props) => ({ eventsToDisplay: state.eventsToDisplay, search: state.search, cardSideIsFront: state.cardSideIsFront });
 
 export default connect(mapStatetoProps)(ResultsContainer);
-
- // mapStyles={styles => ({transform: `translateX(${styles.translateX}%)`})}>

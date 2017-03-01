@@ -15,7 +15,9 @@
     "plugins": [
         "react"
     ],
+    
     "rules": {
+        "no-unused-vars": ["error", { "varsIgnorePattern": "styles"}],
         "react/jsx-uses-vars": "error",
         "react/jsx-uses-react": "error",
         "linebreak-style": [

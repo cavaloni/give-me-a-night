@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import SearchArea from '../search-area/search-area';
-
 import { connect } from 'react-redux';
 import styles from './styles.css';
 

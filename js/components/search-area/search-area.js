@@ -109,14 +109,17 @@ export class SearchArea extends Component {
       </div >
     );
   }
-
 }
 
-export const goog = GoogleMapLoader(SearchArea, {
+SearchArea.propTypes = {
+  searching: React.PropTypes.bool.isRequired
+}
+
+export const googleService = GoogleMapLoader(SearchArea, {
   libraries: ['places'],
   key: MY_API_KEY
 });
 
 const mapStateToProps = (state, props) => ({searching: state.searching});
 
-export default connect(mapStateToProps)(goog);
+export default connect(mapStateToProps)(googleService);

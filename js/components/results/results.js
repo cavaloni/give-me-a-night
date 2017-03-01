@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import * as actions from '../../actions/index';
-import Card from '../card/card';
 import styles from './styles.css';
 import { Observable } from 'rxjs/Rx';
 import immutable from 'object-path-immutable';
+import Card from '../card/card';
 
 export class ResultBox extends Component {
   constructor(props) {
@@ -123,6 +122,12 @@ export class ResultBox extends Component {
       </div>
     );
   }
+}
+
+ResultBox.propTypes = {
+  id: React.PropTypes.number.isRequired,
+  results: React.PropTypes.object.isRequired,
+  cardSideState: React.PropTypes.bool.isRequired
 }
 
 export default connect()(ResultBox);

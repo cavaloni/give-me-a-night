@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router';
 import * as actions from '../../actions/index';
 import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
@@ -81,8 +80,14 @@ export class Card extends Component {
     );
   }
 }
-// butt
+
+Card.propTypes = {
+  title: React.PropTypes.string.isRequired,
+  flippy: React.PropTypes.bool.isRequired,
+  cardNum: React.PropTypes.number.isRequired,
+  evtImg: React.PropTypes.string.isRequired,
+  evtType: React.PropTypes.string.isRequired,
+  resultsBoxNum: React.PropTypes.number.isRequired
+}
 
 export default connect()(Card);
-
-// styles.card${this.props.cardNum} styles.card${this.props.cardNum}

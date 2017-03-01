@@ -12,7 +12,7 @@ import store from './store';
 
 import { Router, Route, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
-import '../css/index.css';
+import '../assets/index.css';
 
 document.addEventListener('DOMContentLoaded', () => ReactDOM.render(
   <Provider store={store}>

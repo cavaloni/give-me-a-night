@@ -56,7 +56,7 @@ module.exports = {
   module: {
     rules: [
       {
-        include: path.resolve(__dirname, 'css'),
+        include: path.resolve(__dirname, 'assets'),
         use: ExtractTextPlugin.extract({fallback: 'style-loader', loader: ['css-loader']}),
         test: /\.css$/
       }, {
