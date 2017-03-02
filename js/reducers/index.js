@@ -84,48 +84,48 @@ export const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_SUCCESS':
       {
-        const bigObj = { 
-          eventsToDisplay: [{}, {}, {}], //this is predefined to be able to iterate over
-        };
+        const eventsToDisplayTemplate = [{}, {}, {}];
 
-        let provider;
-        for (provider in action.results) {
-          const results = action.results[provider]; //for readability
-          let eventToAddIndex; //for the randomizer; to know which index to use
-          let newEventToAddIndex; //for the randomizer; to know which index to use
-          const indecesOfDisplayed = []; //for randomizer to know which have already been picked
-          const tempResultObj = {}; //individual API provider result
+        const eventsToDisplay = eventsToDisplayTemplate.map(() => {
+          const oneNight = {};
+          
+          Object.keys(action.results).forEach((provider) => {
+            const results = action.results[provider]; //for readability
+            let eventToAddIndex; //for the randomizer; to know which index to use
+            let newEventToAddIndex; //for the randomizer; to know new index to use
+            const indecesOfDisplayed = []; //for randomizer to know which have already been picked
+            const tempResultObj = {}; //individual API provider result
+            let eventToAdd; //single individual event, needed for randomizer
 
-          let eventToAdd; //single individual event, needed for randomizer
+            eventsToDisplayTemplate.forEach(() =>  {
+              //randomizer sequence
+              eventToAddIndex = eventRandomizer(results);
+              indecesOfDisplayed.forEach((index) => { //this is to prevent duplicates
+                if (eventToAddIndex === index) {
+                  newEventToAddIndex = eventRandomizer(results, eventToAddIndex);
+                  eventToAddIndex = newEventToAddIndex;
+                  eventToAdd = results[eventToAddIndex];
+                  indecesOfDisplayed.push(eventToAddIndex);
+                }
+              });
+              eventToAdd = results[eventToAddIndex];
+              indecesOfDisplayed.push(eventToAddIndex);
 
-          for (let i = 0; i <= 2; i++) {
-            //randomizer sequence
-            eventToAddIndex = eventRandomizer(results);
-            indecesOfDisplayed.forEach((index) => {
-              if (eventToAddIndex === index) {
-                newEventToAddIndex = eventRandomizer(results, eventToAddIndex);
-                eventToAddIndex = newEventToAddIndex;
-                eventToAdd = results[eventToAddIndex];
-                indecesOfDisplayed.push(eventToAddIndex);
-              }
-            }); 
-            eventToAdd = results[eventToAddIndex];
-
-            //create API provider result object and add
-            tempResultObj[provider] = {};
-            let key;
-            for (key in dataPaths.ebResults) {  //ebResults is used here arbitrarily to iterate over data categories
-              if (dataPaths[provider][key] === undefined) {
-                tempResultObj[provider][key] = undefined;
-                continue;
-              }
-              tempResultObj[provider][key] = objectPath.get(eventToAdd, dataPaths[provider][key]);
-            }
-            indecesOfDisplayed.push(eventToAddIndex);
-            objectPath.set(bigObj, `eventsToDisplay.${i}.${provider}`, tempResultObj[provider]);
-          }
-        }
-        const fetchObj = immutable.set(state, 'eventsToDisplay', bigObj.eventsToDisplay);
+              //create API provider result object and add
+              tempResultObj[provider] = {};
+              Object.keys(dataPaths.ebResults).forEach((key) =>  { //ebResults is used here arbitrarily to iterate over data categories
+                if (dataPaths[provider][key] === undefined) {
+                  tempResultObj[provider][key] = undefined;
+                  return;
+                }
+                tempResultObj[provider][key] = objectPath.get(eventToAdd, dataPaths[provider][key]);
+              });
+              objectPath.set(oneNight, `${provider}`, tempResultObj[provider]);
+            });
+          });
+          return oneNight;
+        });
+        const fetchObj = immutable.set(state, 'eventsToDisplay', eventsToDisplay);
         return fetchObj;
       }
 

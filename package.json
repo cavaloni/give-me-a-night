@@ -1,7 +1,7 @@
 {
-  "name": "thinkful-react-starter",
-  "version": "0.0.1",
-  "description": "A React template",
+  "name": "give-me-a-night",
+  "version": "1.0.0",
+  "description": "Evening Planner",
   "main": "server.js",
   "engines": {
     "node": "7.3.0",
@@ -11,12 +11,11 @@
     "start": "node server.js",
     "prod": "run-p start build-prod",
     "heroku-postbuild": "npm run build-prod",
-    "dev": "run-p watch serve build",
+    "dev": "webpack-dev-server --inline --hot",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "build-prod": "webpack -p --progress --colors --config webpack.prod.config.js",
-    "serve": "webpack-dev-server --inline --hot",
     "lint": "eslint --fix js/"
   },
   "jest": {

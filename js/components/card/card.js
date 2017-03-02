@@ -88,6 +88,6 @@ Card.propTypes = {
   evtImg: React.PropTypes.string.isRequired,
   evtType: React.PropTypes.string.isRequired,
   resultsBoxNum: React.PropTypes.number.isRequired
-}
+};
 
 export default connect()(Card);
