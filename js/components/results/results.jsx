@@ -40,6 +40,9 @@ export class ResultBox extends Component {
   }
 
   render() {
+    if (this.props.results === undefined) {
+      return <div />
+    }
     const { zomatoResults, ebResults, bitResults, movieResults } = this.props.results;
 
     if (!bitResults || !zomatoResults || !ebResults || !movieResults) {

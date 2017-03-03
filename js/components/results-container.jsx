@@ -36,6 +36,9 @@ export class ResultsContainer extends Component {
   }
 
   render() {
+    if (this.props.eventsToDisplay === []) {
+      return <div />
+    }
     return (
       <div>
         <ResultBox
@@ -83,7 +86,8 @@ export class ResultsContainer extends Component {
 
 ResultsContainer.propTypes = {
   eventsToDisplay: React.PropTypes.array.isRequired,
-  cardSideIsFront: React.PropTypes.bool.isRequired
+  cardSideIsFront: React.PropTypes.bool.isRequired,
+  children: React.PropTypes.node.isRequired,
 }
 
 const mapStatetoProps = (state, props) => ({ eventsToDisplay: state.eventsToDisplay, search: state.search, cardSideIsFront: state.cardSideIsFront });

@@ -20,7 +20,7 @@ module.exports = {
   context,
   entry: {
     bundle: [
-      'babel-polyfill', path.resolve(__dirname, 'js/index.js')
+      'babel-polyfill', path.resolve(__dirname, 'js/index.jsx')
     ],
     vendor: VENDOR_LIBS
   },

@@ -2,7 +2,7 @@ import expect from 'expect';
 import {appReducer} from '../js/reducers/index';
 import * as actions from '../js/actions/index';
 import objectPath from 'object-path';
-import {dataPaths} from '../js/reducers/index';
+import dataPaths from '../helper/data_paths';
 
 const iniState = {
     search: {},

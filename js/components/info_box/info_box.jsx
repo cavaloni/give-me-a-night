@@ -85,8 +85,8 @@ export class InfoBox extends Component {
           backgroundColor: '#000',
           opacity: this.props.style.opacity1,
         }}
-        onHide={() => console.log('again nothing')}
-        onBackdropClick={() => { console.log('nothing'); }}
+        onHide={() => {}}
+        onBackdropClick={() => {}}
         show={true}
         autoFocus={false}
       >

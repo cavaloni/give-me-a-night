@@ -8,18 +8,25 @@ export class App extends Component {
     super(props);
   }
   render() {
+    const children = this.props.children;
     return (
       <div>
         <div styleName="styles.city" />
         <div styleName="styles.logo">Give Me A Night</div>
         <div styleName="styles.banner" />
 
-        <SearchArea /> {this.props.children}
+        <SearchArea /> {children}
       </div>
     );
   }
 }
 
-const mapStatetoProps = (state, props) => ({ eventsToDisplay: state.eventsToDisplay, search: state.search });
+App.propTypes = {
+  children: React.PropTypes.node.isRequired,
+};
+
+const mapStatetoProps = (state, props) => ({
+  eventsToDisplay: state.eventsToDisplay, search: state.search,
+});
 
 export default connect(mapStatetoProps)(App);

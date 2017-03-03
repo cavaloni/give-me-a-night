@@ -2,8 +2,10 @@ import fetch from 'isomorphic-fetch';
 import moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/catch';
-import { dataPaths } from '../reducers/index';
+import dataPaths from '../helper/data_paths';
 import objectPath from 'object-path';
+
+const document = require('global/document');
 
 // google JS API
 const google = window.google;
@@ -11,7 +13,7 @@ const autocomplete = new google
     .maps
     .places
     .AutocompleteService();
-const document = require('global/document');
+
 const element = document.createElement('div');
 const places = new google
     .maps
@@ -28,7 +30,9 @@ export const SEARCH_VALUES = 'SEARCH_VALUES';
 export const search = (loc, feel) => ({ type: SEARCH_VALUES, loc, feel });
 
 export const CURRENT_CLICKED_BOX = 'CURRENT_CLICKED_BOX';
-export const currentClickedBox = (num, eventType) => ({ type: CURRENT_CLICKED_BOX, num, eventType });
+export const currentClickedBox = (num, eventType) => ({
+  type: CURRENT_CLICKED_BOX, num, eventType,
+});
 
 export const TOGGLE_CARD_SIDES = 'TOGGLE_CARD_SIDES';
 export const toggleCardSides = () => ({ type: TOGGLE_CARD_SIDES });
@@ -37,13 +41,12 @@ export const TOGGLE_SEARCHING = 'TOGGLE_SEARCHING';
 export const toggleSearching = () => ({ type: TOGGLE_SEARCHING });
 
 export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
-        
   // --------location processing to feed into urls
   let query = '';
   let order = '';
   const city = loc.split(/[ ,]+/);
   const cityQuery = city.map((item) => {
-    if (item == undefined) {
+    if (item === undefined) {
       return '';
     }
     return item;
@@ -60,9 +63,9 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
     };
   }
 
-  //URLs for each API call is constructued based off of input from user
-  const zomatoUrl = ((loc, feel) => {
-    if (feel == 'crazy') {
+  // URLs for each API call is constructued based off of input from user
+  const zomatoUrl = (() => {
+    if (feel === 'crazy') {
       query = 'mexican';
     } else if (feel === 'fun') {
       query = 'indian';
@@ -76,11 +79,10 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       order = 'rating';
     }
     return `https://developers.zomato.com/api/v2.1/search?&q=${query}&lon=${cGeo.long}&lat=${cGeo.lat}&sort=${order}`;
-  })(loc, feel);
+  })();
 
-  const moviesUrl = ((loc, feel) => {
-    let query;
-    if (feel == 'crazy') {
+  const moviesUrl = (() => {
+    if (feel === 'crazy') {
       query = '&certification_country=US&certification=R&sort_by=vote_average.desc';
     } else if (feel === 'fun') {
       query = '&certification_country=US&certification=PG&sort_by=vote_average.desc';
@@ -95,12 +97,10 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
                 .subtract(2, 'months')
                 .format('YYYY-MM-DD');
     return `https://api.themoviedb.org/3/discover/movie?api_key=78a549a366831e6da5647a51ebe710d9&primary_release_date.gte=${toDate}&primary_release_date.lte=${date}${query}`;
-  })(loc, feel);
+  })();
 
-  const bandsInTownArgs = ((loc, feel) => {
-    let query;
-
-    if (feel == 'crazy') {
+  const bandsInTownArgs = (() => {
+    if (feel === 'crazy') {
       query = 'dance';
     } else if (feel === 'fun') {
       query = 'rock';
@@ -121,13 +121,12 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       sort_order: 'popularity',
       category: 'Concerts &amp; Tour Dates',
     };
-  })(loc, feel);
+  })();
 
-  const eventBriteUrl = (loc, feel) => {
-    let query;
+  const eventBriteUrl = () => {
     let catQuery;
 
-    if (feel == 'crazy') {
+    if (feel === 'crazy') {
       query = '105%2C108%2C110';
     } else if (feel === 'fun') {
       query = '113%2C105';
@@ -147,7 +146,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
     return `https://www.eventbriteapi.com/v3/events/search/?location.address=${locationQuery}&location.within=30mi&${catQuery}start_date.keyword=today&token=6SVNTPUPXW5HGNKP5ZGW`;
   };
 
-  const eventBriteUrlAtmpt2 = eventBriteUrl(loc, null); 
+  const eventBriteUrlAtmpt2 = eventBriteUrl(loc, null);
   // EventBrite needs 2 attempts
   // because often first search returns no results -------
 
@@ -178,7 +177,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       });
   });
 
-  const fetchEventBrite = fetch(eventBriteUrl(loc, feel), {}).then(data => data.json()).then((response) => {
+  const fetchEventBrite = fetch(eventBriteUrl(), {}).then(data => data.json()).then((response) => {
     if (response.error) {
       throw new Error('no ebResults 2');
     }
@@ -189,16 +188,18 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
     }
   });
 
-  const fetchEventBriteAtmpt2 = fetch(eventBriteUrlAtmpt2, {}).then(data => data.json()).then((response) => {
-    if (response.error) {
-      throw new Error('no ebResults 2');
-    }
-    if (response.events.length === 0) {
-      throw new Error('no ebResults 2');
-    } else {
-      return response.events;
-    }
-  });
+  const fetchEventBriteAtmpt2 = fetch(eventBriteUrlAtmpt2, {})
+    .then(data => data.json())
+    .then((response) => {
+      if (response.error) {
+        throw new Error('no ebResults 2');
+      }
+      if (response.events.length === 0) {
+        throw new Error('no ebResults 2');
+      } else {
+        return response.events;
+      }
+    });
 
   function getGooglePhotos1(rest) {
     return new Promise((resolve) => {
@@ -211,38 +212,41 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       }, (results, status) => {
         if (status !== 'OK' || results === null) {
           const photo = 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
-          rest.restaurant.featured_image = photo;
-          resolve(rest);
+          const newRest = rest;
+          newRest.restaurant.featured_image = photo;
+          resolve(newRest);
           return;
         }
         placeID = results[0].place_id;
         places.getDetails({
           placeId: placeID,
-        }, (results) => {
-          if (!results.photos) {
+        }, (photoResults) => {
+          if (!photoResults.photos) {
             const photo = 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
-            rest.restaurant.featured_image = photo;
-            resolve(rest);
+            const newRest = rest;
+            newRest.restaurant.featured_image = photo;
+            resolve(newRest);
             return;
           }
-          const photo = results.photos[0].getUrl({ maxWidth: 300, maxHeight: 300 });
-          rest.restaurant.featured_image = photo;
-          resolve(rest);
+          const photo = photoResults.photos[0].getUrl({ maxWidth: 300, maxHeight: 300 });
+          const newRest = rest;
+          newRest.restaurant.featured_image = photo;
+          resolve(newRest);
         });
       });
     });
   }
 
-  //Fetches are converted into observables to be able
-  //process each fetch individual and for more declarative code
+  // Fetches are converted into observables to be able
+  // process each fetch individual and for more declarative code
   const zomatoObs = Observable.fromPromise(fetchZomato);
   const movieObs = Observable.fromPromise(fetchMovies);
   const bandsInTownObs = Observable.fromPromise(fetchBandsInTown);
   const eventbriteObs = Observable.fromPromise(fetchEventBrite);
   const eventbriteObs2 = Observable.fromPromise(fetchEventBriteAtmpt2);
 
-  //errored object is returned for each api result
-  //if the fetch errors
+  // errored object is returned for each api result
+  // if the fetch errors
   function erroredObj(provider) {
     const errObj = {};
     objectPath.set(errObj, `${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png');
@@ -255,8 +259,8 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
     .reduce((ob1, ob2) => ob1.catch(() => ob2), Observable.throw(''))
     .mergeAll();
 
-  //zomatos results often come back without images
-  //so fetches are needed to google places to get new images
+  // zomatos results often come back without images
+  // so fetches are needed to google places to get new images
   const zomatoResults = zomatoObs.flatMap(x => Observable.from(x));
 
   const fiveZomsResults = zomatoResults
@@ -271,39 +275,39 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
 
   const updatedZomsResults = Observable.merge(
       zomsWithPics,
-      googlePhotosObs
+      googlePhotosObs,
     ).toArray();
 
   const zomatoRes = updatedZomsResults
     .map(results => ({
-      zomatoResults: results
+      zomatoResults: results,
     }))
     .catch(() => Observable.of({
-      zomatoResults: erroredObj('zomatoResults')
+      zomatoResults: erroredObj('zomatoResults'),
     }));
 
   const movieRes = movieObs
     .map(results => ({
-      movieResults: results
+      movieResults: results,
     }))
     .catch(() => Observable.of({
-      movieResults: erroredObj('movieResults')
+      movieResults: erroredObj('movieResults'),
     }));
 
   const bitRes = bandsInTownObs
     .map(results => ({
-      bitResults: results
+      bitResults: results,
     }))
     .catch(() => Observable.of({
-      bitResults: erroredObj('bitResults')
+      bitResults: erroredObj('bitResults'),
     }));
 
   const evRes = eventBrite2Attempts
     .map(results => ({
-      ebResults: results
+      ebResults: results,
     }))
     .catch(() => Observable.of({
-      ebResults: erroredObj('ebResults')
+      ebResults: erroredObj('ebResults'),
     }));
 
   const allResultsMerge = Observable.merge(zomatoRes, bitRes, movieRes, evRes)
@@ -323,10 +327,10 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
   //     dispatch(toggleSearching);
   //   });
 
-    const finalResults = allResultsMerge.toPromise();
-    return finalResults.then(x => {
-      dispatch(fetchSuccess(x));
-      dispatch(toggleCardSides());
-      dispatch(toggleSearching());
-    });
-  };
+  const finalResults = allResultsMerge.toPromise();
+  return finalResults.then((x) => {
+    dispatch(fetchSuccess(x));
+    dispatch(toggleCardSides());
+    dispatch(toggleSearching());
+  });
+};

@@ -2,16 +2,13 @@ require('babel-polyfill');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import App from './components/app/app';
+import store from './store';
+import { Router, Route, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
 
 import InfoBox from './components/info_box/info_box';
 import ResultContainer from './components/results-container';
-
-import store from './store';
-
-import { Router, Route, browserHistory } from 'react-router';
-import { Provider } from 'react-redux';
+import App from './components/app/app';
 import '../assets/index.css';
 
 document.addEventListener('DOMContentLoaded', () => ReactDOM.render(

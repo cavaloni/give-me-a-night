@@ -1,8 +1,9 @@
 import objectPath from 'object-path';
 import immutable from 'object-path-immutable';
+import dataPaths from '../helper/data_paths';
 
-//function to randomize the top five events returned
-//from each of the api calls, so as not to be repetitive on results
+// function to randomize the top five events returned
+// from each of the api calls, so as not to be repetitive on results
 function eventRandomizer(events, not) {
   if (events.length === 1) {
     return 0;
@@ -22,121 +23,75 @@ function eventRandomizer(events, not) {
   }
 
   let eventNumber;
-  while ((eventNumber = random()) == not);
-  
+  while ((eventNumber = random()) === not);
+
   return eventNumber;
 }
 
-//initial state
+// initial state
 const initialState = {
   search: {},
-  eventsToDisplay: [{}, {}, {}],
+  eventsToDisplay: [],
   clickedBox: {},
   cardSideIsFront: false,
   searching: false,
 };
 
-//The dataPaths object stores the strings of the paths to the specific data from each 
-//API provider, which is needed for objectPath. This way the algorithm in the appReducer
-//of type FETCH_SUCCESS can very simply extract the data. Most importantly, this also makes it very easy
-//to add or subtract different types of data for each of the API calls in a straight-forward way.
-
-export const dataPaths = {
-  ebResults: {
-    image: 'logo.url',
-    title: 'name.text',
-    location: 'placeholder',
-    description: 'description.text',
-    link: 'url',
-    startTime: 'start.local',
-    score: undefined,
-  },
-  zomatoResults: {
-    image: 'restaurant.featured_image',
-    title: 'restaurant.name',
-    location: 'restaurant.location.address',
-    description: 'restaurant.cuisines',
-    link: 'restaurant.url',
-    startTime: undefined,
-    score: 'restaurant.user_rating',
-  },
-  movieResults: {
-    image: 'poster_path',
-    title: 'original_title',
-    location: undefined,
-    description: 'overview',
-    link: undefined,
-    startTime: undefined,
-    score: 'vote_average',
-  },
-  bitResults: {
-    image: 'image.medium.url',
-    title: 'title',
-    location: 'venue_name',
-    description: 'description',
-    link: 'url',
-    startTime: 'start_time',
-    score: undefined,
-  },
-};
 
 export const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_SUCCESS':
       {
-        const eventsToDisplayTemplate = [{}, {}, {}];
+        const eventsToDisplay = [{}, {}, {}];
 
-        const eventsToDisplay = eventsToDisplayTemplate.map(() => {
-          const oneNight = {};
-          
-          Object.keys(action.results).forEach((provider) => {
-            const results = action.results[provider]; //for readability
-            let eventToAddIndex; //for the randomizer; to know which index to use
-            let newEventToAddIndex; //for the randomizer; to know new index to use
-            const indecesOfDisplayed = []; //for randomizer to know which have already been picked
-            const tempResultObj = {}; //individual API provider result
-            let eventToAdd; //single individual event, needed for randomizer
+        Object.keys(action.results).forEach((provider) => {
+          const results = action.results[provider]; // for readability
+          let eventToAddIndex; // for the randomizer; to know which index to use
+          let newEventToAddIndex; // for the randomizer; to know new index to use
+          const indecesOfDisplayed = []; // for randomizer to know which have already been picked
+          const tempResultObj = {}; // individual API provider result
+          let eventToAdd; // single individual event, needed for randomizer
 
-            eventsToDisplayTemplate.forEach(() =>  {
-              //randomizer sequence
-              eventToAddIndex = eventRandomizer(results);
-              indecesOfDisplayed.forEach((index) => { //this is to prevent duplicates
-                if (eventToAddIndex === index) {
-                  newEventToAddIndex = eventRandomizer(results, eventToAddIndex);
-                  eventToAddIndex = newEventToAddIndex;
-                  eventToAdd = results[eventToAddIndex];
-                  indecesOfDisplayed.push(eventToAddIndex);
-                }
-              });
-              eventToAdd = results[eventToAddIndex];
-              indecesOfDisplayed.push(eventToAddIndex);
-
-              //create API provider result object and add
-              tempResultObj[provider] = {};
-              Object.keys(dataPaths.ebResults).forEach((key) =>  { //ebResults is used here arbitrarily to iterate over data categories
-                if (dataPaths[provider][key] === undefined) {
-                  tempResultObj[provider][key] = undefined;
-                  return;
-                }
-                tempResultObj[provider][key] = objectPath.get(eventToAdd, dataPaths[provider][key]);
-              });
-              objectPath.set(oneNight, `${provider}`, tempResultObj[provider]);
+          for (let i = 0; i <= 2; i++) {
+              // randomizer sequence
+            eventToAddIndex = eventRandomizer(results);
+            indecesOfDisplayed.forEach((index) => { // this is to prevent duplicates
+              if (eventToAddIndex === index) {
+                newEventToAddIndex = eventRandomizer(results, eventToAddIndex);
+                eventToAddIndex = newEventToAddIndex;
+                eventToAdd = results[eventToAddIndex];
+                indecesOfDisplayed.push(eventToAddIndex);
+              }
             });
-          });
-          return oneNight;
+            eventToAdd = results[eventToAddIndex];
+            indecesOfDisplayed.push(eventToAddIndex);
+
+              // create API provider result object and add
+            tempResultObj[provider] = {};
+            dataPaths.dataCategories.forEach((key) => { // ebResults is used here arbitrarily to iterate over data categories
+              if (dataPaths[provider][key] === undefined) {
+                tempResultObj[provider][key] = undefined;
+                return;
+              }
+              tempResultObj[provider][key] = objectPath.get(eventToAdd, dataPaths[provider][key]);
+            });
+            objectPath.set(eventsToDisplay, `${i}.${provider}`, tempResultObj[provider]);
+          }
         });
+
         const fetchObj = immutable.set(state, 'eventsToDisplay', eventsToDisplay);
         return fetchObj;
       }
 
     case 'SEARCH_VALUES':
       {
-        return Object.assign({}, state, {
+        return {
+          ...state,
           search: {
             loc: action.loc,
             feel: action.feel,
           },
-        });
+        };
       }
 
     case 'CURRENT_CLICKED_BOX':
