@@ -47,9 +47,9 @@ export const appReducer = (state = initialState, action) => {
         Object.keys(action.results).forEach((provider) => {
           const results = action.results[provider]; // for readability
           let eventToAddIndex; // for the randomizer; to know which index to use
-          let newEventToAddIndex; // for the randomizer; to know new index to use
+          let newEventToAddIndex; // for the randomizer; if new index needed to prevent duplicates
           const indecesOfDisplayed = []; // for randomizer to know which have already been picked
-          const tempResultObj = {}; // individual API provider result
+          let tempResultObj = {}; // individual API provider result
           let eventToAdd; // single individual event, needed for randomizer
 
           for (let i = 0; i <= 2; i++) {
@@ -66,15 +66,15 @@ export const appReducer = (state = initialState, action) => {
             eventToAdd = results[eventToAddIndex];
             indecesOfDisplayed.push(eventToAddIndex);
 
-              // create API provider result object and add
-            tempResultObj[provider] = {};
-            dataPaths.dataCategories.forEach((key) => { // ebResults is used here arbitrarily to iterate over data categories
+              // create API provider result object
+            tempResultObj = dataPaths.dataCategories.reduce((acc, key) => {
               if (dataPaths[provider][key] === undefined) {
-                tempResultObj[provider][key] = undefined;
-                return;
+                objectPath.set(acc, `${provider}.${key}`, undefined);
+                return acc
               }
-              tempResultObj[provider][key] = objectPath.get(eventToAdd, dataPaths[provider][key]);
-            });
+              objectPath.set(acc, `${provider}.${key}`, objectPath.get(eventToAdd, dataPaths[provider][key]));
+              return acc
+            }, {});
             objectPath.set(eventsToDisplay, `${i}.${provider}`, tempResultObj[provider]);
           }
         });
