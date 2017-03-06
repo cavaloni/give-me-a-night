@@ -3,7 +3,7 @@
 // of type FETCH_SUCCESS can very simply extract the data. Most importantly, this also makes it very easy
 // to add or subtract different types of data for each of the API calls in a straight-forward way.
 
-const dataPaths = {
+const dataPaths = Object.freeze({
   dataCategories: ['image', 'title', 'location', 'description', 'link', 'startTime', 'score'],
   ebResults: {
     image: 'logo.url',
@@ -41,6 +41,6 @@ const dataPaths = {
     startTime: 'start_time',
     score: undefined,
   },
-};
+});
 
 export default dataPaths;

@@ -70,17 +70,20 @@ export const appReducer = (state = initialState, action) => {
             tempResultObj = dataPaths.dataCategories.reduce((acc, key) => {
               if (dataPaths[provider][key] === undefined) {
                 objectPath.set(acc, `${provider}.${key}`, undefined);
-                return acc
+                return acc;
               }
               objectPath.set(acc, `${provider}.${key}`, objectPath.get(eventToAdd, dataPaths[provider][key]));
-              return acc
+              return acc;
             }, {});
+
             objectPath.set(eventsToDisplay, `${i}.${provider}`, tempResultObj[provider]);
           }
         });
 
-        const fetchObj = immutable.set(state, 'eventsToDisplay', eventsToDisplay);
-        return fetchObj;
+        return {
+          ...state,
+          eventsToDisplay,
+        };
       }
 
     case 'SEARCH_VALUES':

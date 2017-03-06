@@ -41,7 +41,7 @@ export const TOGGLE_SEARCHING = 'TOGGLE_SEARCHING';
 export const toggleSearching = () => ({ type: TOGGLE_SEARCHING });
 
 export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
-  // --------location processing to feed into urls
+  // --------location processing to feed into url creators
   let query = '';
   let order = '';
   const city = loc.split(/[ ,]+/);
@@ -63,7 +63,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
     };
   }
 
-  // URLs for each API call is constructued based off of input from user
+  // URLs creators for each API
   const zomatoUrl = (() => {
     if (feel === 'crazy') {
       query = 'mexican';
@@ -177,29 +177,23 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       });
   });
 
-  const fetchEventBrite = fetch(eventBriteUrl(), {}).then(data => data.json()).then((response) => {
-    if (response.error) {
-      throw new Error('no ebResults 2');
-    }
-    if (response.events.length === 0 || response.error) {
-      throw new Error('no ebResults 1');
-    } else {
-      return response.events;
-    }
-  });
-
-  const fetchEventBriteAtmpt2 = fetch(eventBriteUrlAtmpt2, {})
+  const fetchEventBriteFunc = (ebUrl) => {
+    return fetch(ebUrl, {})
     .then(data => data.json())
     .then((response) => {
       if (response.error) {
         throw new Error('no ebResults 2');
       }
-      if (response.events.length === 0) {
-        throw new Error('no ebResults 2');
+      if (response.events.length === 0 || response.error) {
+        throw new Error('no ebResults 1');
       } else {
         return response.events;
       }
     });
+  };
+
+  const fetchEventBrite = fetchEventBriteFunc(eventBriteUrl());
+  const fetchEventBriteAtmpt2 = fetchEventBriteFunc(eventBriteUrlAtmpt2);
 
   function getGooglePhotos1(rest) {
     return new Promise((resolve) => {
@@ -246,7 +240,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
   const eventbriteObs2 = Observable.fromPromise(fetchEventBriteAtmpt2);
 
   // errored object is returned for each api result
-  // if the fetch errors
+  // if the fetch errors (read ../helpers/data_paths for more info on dataPaths)
   function erroredObj(provider) {
     const errObj = {};
     objectPath.set(errObj, `${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png');
@@ -254,6 +248,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
     return [errObj];
   }
 
+  // two attempts for eventbrite, one without 'feel' argument
   const eventBrite2Attempts = Observable
     .of(eventbriteObs, eventbriteObs2)
     .reduce((ob1, ob2) => ob1.catch(() => ob2), Observable.throw(''))
@@ -277,6 +272,8 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       zomsWithPics,
       googlePhotosObs,
     ).toArray();
+
+  // Each result gets an observer to be abe to return an errored object if needed
 
   const zomatoRes = updatedZomsResults
     .map(results => ({
@@ -314,18 +311,6 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
     .finally()
     .scan((acc, curr) =>
       Object.assign({}, acc, curr), {});
-
-  // allResultsMerge
-  //   .takeLast(1)
-  //   .subscribe((returnedItems) => {
-  //     dispatch(fetchSuccess(returnedItems));
-  //     dispatch(toggleCardSides());
-  //     dispatch(toggleSearching());
-  //   }, err => {
-  //     dispatch(fetchFailure);
-  //   }, x => {
-  //     dispatch(toggleSearching);
-  //   });
 
   const finalResults = allResultsMerge.toPromise();
   return finalResults.then((x) => {
