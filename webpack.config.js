@@ -90,7 +90,7 @@ module.exports = {
         // loader: require.resolve("file-loader") + "?name=../[path][name].[ext]"
     },
     {
-      test: /\.jsx?$/,
+      test: /\.(js|jsx)$/,
       include: path.resolve(__dirname, 'js'),
       use: {
         loader: 'babel-loader',
