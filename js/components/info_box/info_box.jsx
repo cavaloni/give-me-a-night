@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styles from './styles.css';
 import { browserHistory } from 'react-router';
 import { Modal } from 'react-overlays';
+import styles from './styles.css';
 import moment from 'moment';
 
 const modalStyle = {

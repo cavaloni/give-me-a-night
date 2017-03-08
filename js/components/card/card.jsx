@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import * as actions from '../../actions/index';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
-import styles from './styles.css';
 import classNames from 'classnames';
+import * as actions from '../../actions/index';
+import styles from './styles.css';
 
 export class Card extends Component {
   constructor(props) {
@@ -35,10 +35,10 @@ export class Card extends Component {
 
     if (this.props.flippy) { // render the new results on the appropriate side of flip-card
       this.backImage = nextProps.evtImg;
-      this.backTitle = this.evtName || nextProps.evtName;
+      this.backTitle = nextProps.evtName;
     } else {
       this.frontImage = nextProps.evtImg;
-      this.frontTitle = this.evtName || nextProps.evtName;
+      this.frontTitle = nextProps.evtName;
     }
   }
 
@@ -66,13 +66,15 @@ export class Card extends Component {
           <div styleName={cardStyleFront}>
             <h3>{this.props.title}</h3>
             <div styleName="styles.darkener">
-              <img src={this.frontImage} placeholder="Image" onClick={this.openInfoBox} />
+              <img src={this.frontImage} alt="" placeholder="Image" onClick={this.openInfoBox} />
             </div>
             <span styleName="styles.title">{this.frontTitle}</span>
           </div>
           <div styleName={cardStyleBack}>
             <h3>{this.props.title}</h3>
-            <div styleName="styles.darkener"><img src={this.backImage} placeholder="Image" onClick={this.openInfoBox} /></div>
+            <div styleName="styles.darkener">
+              <img src={this.backImage} alt="" placeholder="Image" onClick={this.openInfoBox} />
+            </div>
             <span styleName="styles.title">{this.backTitle}</span>
           </div>
         </div>

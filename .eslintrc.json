@@ -13,13 +13,16 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "jsx-a11y",
+        "import"
     ],
     
     "rules": {
         "no-unused-vars": ["error", { "varsIgnorePattern": "styles"}],
         "react/jsx-uses-vars": "error",
         "react/jsx-uses-react": "error",
+        "import/no-unresolved": [2, { "caseSensitive": false }],
         "linebreak-style": [
             "error",
             "unix"

@@ -1,9 +1,10 @@
+import objectPath from 'object-path';
 import fetch from 'isomorphic-fetch';
 import moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/catch';
 import dataPaths from '../helper/data_paths';
-import objectPath from 'object-path';
+
 
 const document = require('global/document');
 
@@ -177,8 +178,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
       });
   });
 
-  const fetchEventBriteFunc = (ebUrl) => {
-    return fetch(ebUrl, {})
+  const fetchEventBriteFunc = ebUrl => fetch(ebUrl, {})
     .then(data => data.json())
     .then((response) => {
       if (response.error) {
@@ -190,7 +190,6 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
         return response.events;
       }
     });
-  };
 
   const fetchEventBrite = fetchEventBriteFunc(eventBriteUrl());
   const fetchEventBriteAtmpt2 = fetchEventBriteFunc(eventBriteUrlAtmpt2);
