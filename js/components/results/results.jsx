@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styles from './styles.css';
 import { Observable } from 'rxjs/Rx';
 import immutable from 'object-path-immutable';
+import styles from './styles.css';
 import Card from '../card/card';
 
 export class ResultBox extends Component {
@@ -41,7 +41,7 @@ export class ResultBox extends Component {
 
   render() {
     if (this.props.results === undefined) {
-      return <div />
+      return <div />;
     }
     const { zomatoResults, ebResults, bitResults, movieResults } = this.props.results;
 
@@ -49,28 +49,18 @@ export class ResultBox extends Component {
       return <div />;
     }
 
-    if (zomatoResults.image === '') { //ocassionally zomatoResults returns a blank image
-      zomatoResults.image === 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
-    }
-
-    const noResultsImage = 'http://topradio.com.ua/static/images/sad-no-results.png'; 
-
     const movie = {
-      image: `https://image.tmdb.org/t/p/w500${movieResults.image}` || noResultsImage, //movie results requires prepended address to retrieve
+      image: `https://image.tmdb.org/t/p/w500${movieResults.image}`, // movie results requires prepended address to retrieve
       title: movieResults.title,
     };
 
     const concert = {
-      image: bitResults.image === undefined
-                ? 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQEr_CovLbfaLjHIo6JgUfkfVKm' +
-                        '50Y6yHynVdAALkf4OI__HNDwFQ'
-                : bitResults.image,
+      image: bitResults.image,
       title: bitResults.title,
     };
 
     const event = {
-      image: ebResults.image || 'http://www.e-xinergia.com/xframework/app/frontend/view/imgs//slides/slide_venta_' +
-                    'entradas.png',
+      image: ebResults.image,
       title: ebResults.title,
     };
 
