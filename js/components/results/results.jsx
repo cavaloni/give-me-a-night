@@ -55,7 +55,10 @@ export class ResultBox extends Component {
     };
 
     const concert = {
-      image: bitResults.image,
+      image: bitResults.image === undefined
+                ? 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQEr_CovLbfaLjHIo6JgUfkfVKm' +
+                        '50Y6yHynVdAALkf4OI__HNDwFQ'
+                : bitResults.image,
       title: bitResults.title,
     };
 

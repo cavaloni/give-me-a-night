@@ -204,7 +204,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
         input: `${rest.restaurant.location.address} ${rest.restaurant.name}`,
       }, (results, status) => {
         if (status !== 'OK' || results === null) {
-          const photo = 'https://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
+          const photo = 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
           const newRest = rest;
           newRest.restaurant.featured_image = photo;
           resolve(newRest);
@@ -215,7 +215,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
           placeId: placeID,
         }, (photoResults) => {
           if (!photoResults.photos) {
-            const photo = 'https://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
+            const photo = 'http://freedesignfile.com/upload/2012/10/Restaurant_menu__11-1.jpg';
             const newRest = rest;
             newRest.restaurant.featured_image = photo;
             resolve(newRest);
