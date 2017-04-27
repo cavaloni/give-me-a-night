@@ -1,7 +1,7 @@
 import objectPath from 'object-path';
 import fetch from 'isomorphic-fetch';
 import moment from 'moment';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import dataPaths from '../helper/data_paths';
 
