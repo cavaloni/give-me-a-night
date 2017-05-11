@@ -5,7 +5,7 @@ const storeStateMock = {
     },
     eventsToDisplay: [{
         bitResults: {
-            image: 'http://topradio.com.ua/static/images/sad-no-results.png',
+            image: '../../../assets/img/no-results.png',
             title: 'Small Town?',
             location: undefined,
             description: undefined,
@@ -14,7 +14,7 @@ const storeStateMock = {
             score: undefined
         },
         ebResults: {
-            image: 'http://topradio.com.ua/static/images/sad-no-results.png',
+            image: '../../../assets/img/no-results.png',
             title: 'Small Town?',
             location: undefined,
             description: undefined,
@@ -23,7 +23,7 @@ const storeStateMock = {
             score: undefined
         },
         zomatoResults: {
-            image: 'http://topradio.com.ua/static/images/sad-no-results.png',
+            image: '../../../assets/img/no-results.png',
             title: 'Small Town?',
             location: undefined,
             description: undefined,
@@ -32,7 +32,7 @@ const storeStateMock = {
             score: undefined
         },
         movieResults: {
-            image: 'http://topradio.com.ua/static/images/sad-no-results.png',
+            image: '../../../assets/img/no-results.png',
             title: 'Small Town?',
             location: undefined,
             description: undefined,

@@ -26,7 +26,7 @@ describe('app reducer', () => {
         Object
             .keys(dataPaths)
             .forEach((provider) => {
-                objectPath.set(testerObj, `${provider}.0.${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png');
+                objectPath.set(testerObj, `${provider}.0.${dataPaths[provider].image}`, '../../../assets/img/no-results.png');
                 objectPath.set(testerObj, `${provider}.0.${dataPaths[provider].title}`, 'Small Town?');
             });
 
@@ -42,7 +42,7 @@ describe('app reducer', () => {
                     .forEach((provider) => {
                         let result = {};
                         Object.assign(result, {
-                            image: 'http://topradio.com.ua/static/images/sad-no-results.png',
+                            image: '../../../assets/img/no-results.png',
                             title: 'Small Town?',
                             location: undefined,
                             description: undefined,

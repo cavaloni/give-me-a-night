@@ -12,6 +12,7 @@ const modalStyle = {
   bottom: 0,
   left: 0,
   right: 0,
+  outline: 'none',
 };
 
 export class InfoBox extends Component {

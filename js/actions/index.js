@@ -242,7 +242,7 @@ export const fetchResults = (loc, feel, coordinates) => (dispatch) => {
   // if the fetch errors (read ../helpers/data_paths for more info on dataPaths)
   function erroredObj(provider) {
     const errObj = {};
-    objectPath.set(errObj, `${dataPaths[provider].image}`, 'https://topradio.com.ua/static/images/sad-no-results.png');
+    objectPath.set(errObj, `${dataPaths[provider].image}`, '../../../assets/img/no-results.png');
     objectPath.set(errObj, `${dataPaths[provider].title}`, 'Small Town?');
     return [errObj];
   }

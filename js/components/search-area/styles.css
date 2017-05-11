@@ -144,7 +144,7 @@ select {
 
 /*media queries*/
 
-@media screen and (max-width: 540px) {
+@media screen and (max-width: 1000px) {
     form>* {
         font-size: 12px;
         display: block;

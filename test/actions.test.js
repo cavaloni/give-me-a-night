@@ -42,12 +42,12 @@ describe('async actions', () => {
 
     nock('https://lh4.googleusercontent.com/')
       .get('/')
-      .reply(200, 'http://topradio.com.ua/static/images/sad-no-results.png');
+      .reply(200, '../../../assets/img/no-results.png');
 
     const testerObj = {};
 
     Object.keys(dataPaths).forEach((provider) => {
-      objectPath.set(testerObj, `${provider}.0.${dataPaths[provider].image}`, 'http://topradio.com.ua/static/images/sad-no-results.png');
+      objectPath.set(testerObj, `${provider}.0.${dataPaths[provider].image}`, '../../../assets/img/no-results.png');
       objectPath.set(testerObj, `${provider}.0.${dataPaths[provider].title}`, 'Small Town?');
     });
 

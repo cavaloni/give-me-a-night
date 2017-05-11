@@ -91,7 +91,7 @@ export class SearchArea extends Component {
 
           </label>
           <label>
-            How are you feeling?
+            What kind of night?
             <select ref={ref => this.feeling = ref}>
               <option value="crazy">Crazy</option>
               <option value="fun">Fun</option>

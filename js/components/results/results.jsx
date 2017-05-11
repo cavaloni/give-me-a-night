@@ -50,7 +50,8 @@ export class ResultBox extends Component {
     }
 
     const movie = {
-      image: `https://image.tmdb.org/t/p/w500${movieResults.image}`, // movie results requires prepended address to retrieve
+      image: movieResults.image === null ? '../../../assets/img/event.jpeg' :
+        `https://image.tmdb.org/t/p/w500${movieResults.image}`, // movie results requires prepended address to retrieve
       title: movieResults.title,
     };
 
@@ -63,7 +64,7 @@ export class ResultBox extends Component {
     };
 
     const event = {
-      image: ebResults.image,
+      image: ebResults.image === undefined ? '../../../assets/img/event.jpeg' : ebResults.image,
       title: ebResults.title,
     };
 

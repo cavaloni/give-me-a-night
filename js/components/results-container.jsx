@@ -57,7 +57,7 @@ export class ResultsContainer extends Component {
           cardSideState={this.state.renderList.list2}
         />
         <RouteTransition
-          style={{ position: 'absolute' }}
+          style={{ position: 'absolute', outline: 'none' }}
           component={false}
           pathname={this.props.location.pathname}
           atEnter={{
@@ -71,7 +71,7 @@ export class ResultsContainer extends Component {
             opacity1: 0,
           }}
           atActive={{
-            scaleZ: spring(0.01, { stiffness: 201, damping: 26 }),
+            scaleZ: spring(0.001, { stiffness: 202, damping: 21.8 }),
             opacity: 1,
             opacity1: 0.5,
           }}
